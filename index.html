@@ -330,9 +330,9 @@ const CONFIG = {
 
   adminPin:    "1926",                    // ⚠️ CAMBIALO
 
-  // --- Supabase (collegato) ---
-  supabaseUrl: "https://wpuyvrmqrbwauobdzzyy.supabase.co",
-  supabaseKey: "sb_publishable_E9ZMJr6i5UBLlWDv_0gXcw_bGgdYQLC"
+  // --- Supabase (progetto Scintilla, tabella cartellone_prenotazioni) ---
+  supabaseUrl: "https://qorswaabqqcxpsmngbpo.supabase.co",
+  supabaseKey: "sb_publishable_xoKJtS9w_kv_dddgGl8Ycg_BC2UM0w6"
 };
 /* ============================================================= */
 
@@ -351,7 +351,7 @@ const store = {
   },
   async getAll(){
     if(sb){
-      const {data, error} = await sb.from('prenotazioni').select('*');
+      const {data, error} = await sb.from('cartellone_prenotazioni').select('*');
       if(error){ console.error(error); return reservations; }
       const map = {};
       data.forEach(r => map[r.numero] = r);
@@ -361,7 +361,7 @@ const store = {
   },
   async reserve(numero, payload){
     if(sb){
-      const {error} = await sb.from('prenotazioni').insert([{numero, ...payload}]);
+      const {error} = await sb.from('cartellone_prenotazioni').insert([{numero, ...payload}]);
       if(error){
         if(error.code === '23505') return {ok:false, taken:true};
         return {ok:false, msg:error.message};
@@ -598,8 +598,8 @@ function fireConfetti(duration){
   if(sb){
     setInterval(refresh, 20000);
     try{
-      sb.channel('prenotazioni-rt')
-        .on('postgres_changes',{event:'INSERT',schema:'public',table:'prenotazioni'},()=>refresh())
+      sb.channel('cartellone-rt')
+        .on('postgres_changes',{event:'INSERT',schema:'public',table:'cartellone_prenotazioni'},()=>refresh())
         .subscribe();
     }catch(e){/* realtime facoltativo */}
   }
