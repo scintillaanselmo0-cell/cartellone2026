@@ -16,7 +16,7 @@ Dal terminale, nella cartella del progetto:
 supabase login
 supabase link --project-ref qorswaabqqcxpsmngbpo
 
-supabase secrets set STRIPE_SECRET_KEY="sk_live_..."
+supabase secrets set CART_STRIPE_SECRET_KEY="sk_live_..."
 supabase secrets set PREZZO_CENTESIMI="1000"            # 10,00 € a numero
 supabase secrets set SITO_URL="https://scintillaanselmo0-cell.github.io/cartellone2026"
 ```
@@ -38,7 +38,7 @@ Stripe → **Developers → Webhooks → Add endpoint**
 Copia il **Signing secret** (`whsec_...`) e salvalo:
 
 ```bash
-supabase secrets set STRIPE_WEBHOOK_SECRET="whsec_..."
+supabase secrets set CART_STRIPE_WEBHOOK_SECRET="whsec_..."
 ```
 
 (Dopo aver impostato questo secret, ridistribuisci il webhook se necessario:

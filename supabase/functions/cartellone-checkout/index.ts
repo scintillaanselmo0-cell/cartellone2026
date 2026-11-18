@@ -14,7 +14,7 @@ const cors = {
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...cors, "Content-Type": "application/json" } });
 
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, { apiVersion: "2024-06-20" });
+const stripe = new Stripe(Deno.env.get("CART_STRIPE_SECRET_KEY")!, { apiVersion: "2024-06-20" });
 const PREZZO = parseInt(Deno.env.get("PREZZO_CENTESIMI") || "1000", 10); // 10,00 €
 const SITO = (Deno.env.get("SITO_URL") || "").replace(/\/$/, "");
 const supa = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);

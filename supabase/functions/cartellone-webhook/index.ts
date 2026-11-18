@@ -11,8 +11,8 @@
 import Stripe from "https://esm.sh/stripe@16?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, { apiVersion: "2024-06-20" });
-const WH = Deno.env.get("STRIPE_WEBHOOK_SECRET")!;
+const stripe = new Stripe(Deno.env.get("CART_STRIPE_SECRET_KEY")!, { apiVersion: "2024-06-20" });
+const WH = Deno.env.get("CART_STRIPE_WEBHOOK_SECRET")!;
 const supa = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
 Deno.serve(async (req) => {
