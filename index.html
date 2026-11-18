@@ -20,7 +20,7 @@
   --blue:#7aa2ff; --green:#49c17e; --amber:#d9a441; --red:#e2645f;
   --radius:16px;
 }
-*{box-sizing:border-box} html,body{margin:0;padding:0}
+*{box-sizing:border-box} html,body{margin:0;padding:0;overflow-x:hidden;max-width:100%}
 body{
   font-family:'Inter',system-ui,sans-serif;
   background:var(--bg);
@@ -88,12 +88,12 @@ body::after{
 .banner.err{background:rgba(226,100,95,.08);border:1px solid rgba(226,100,95,.35);color:#f2bdbb}
 
 /* ---------- SHOWCASE (telefoni) ---------- */
-.showcase{margin-top:64px}
+.showcase{margin-top:64px;overflow:hidden}
 .sc-head{max-width:760px;margin-bottom:22px}
 .sc-head h2{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(24px,4vw,34px);letter-spacing:-.02em;margin:10px 0 0}
 .sc-head p{color:var(--muted);font-size:15px;margin:10px 0 0;max-width:560px}
 .phonerow{
-  margin:0 calc(50% - 50vw);padding:14px 0;
+  padding:14px 0;
   overflow:hidden;
 }
 .phonetrack{display:flex;gap:30px;width:max-content;padding:0 30px;
