@@ -262,8 +262,8 @@ body{
   </div>
 
   <div class="admin" id="adminPanel" style="display:none">
-    <h3>🎉 Estrazione & Prenotazioni</h3>
-    <div class="asub">Pannello privato — qui vedi i contatti ed estrai il vincitore.</div>
+    <h3>🎉 Vincitore & Prenotazioni</h3>
+    <div class="asub">Il numero vincente è il primo estratto sulla Ruota di Napoli del 24/12/2026. Inseriscilo qui sotto per vedere chi ha vinto.</div>
 
     <div class="draw-box">
       <div class="draw-num" id="drawNum">—</div>
@@ -272,7 +272,8 @@ body{
     </div>
 
     <div class="admin-actions">
-      <button class="btn" id="drawBtn">🎰 Estrai il vincitore</button>
+      <input id="winInput" type="number" min="1" max="90" placeholder="N° estratto a Napoli" style="width:200px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--cream);font-size:15px;font-family:inherit;outline:none" />
+      <button class="btn" id="winBtn" style="width:auto;padding:14px 20px">Mostra vincitore</button>
       <button class="btn ghost" id="csvBtn">⬇ Esporta contatti (CSV)</button>
       <button class="btn ghost" id="refreshBtn">↻ Aggiorna</button>
       <button class="btn ghost" id="adminBack">← Cartellone</button>
@@ -318,10 +319,10 @@ body{
 const CONFIG = {
   brandTop:    "SCINTILLA · DIGITAL · WEB",
   titolo:      'Il Cartellone della <span class="gold">Fortuna</span>',
-  sottotitolo: "Prenota un numero da 1 a 90. Il numero estratto si aggiudica un sito web professionale, tutto suo.",
+  sottotitolo: "Prenota un numero da 1 a 90. Vince chi ha scelto il numero uguale al primo estratto sulla Ruota di Napoli del Lotto di mercoledì 24 dicembre 2026.",
   premio:      "Un sito web professionale su misura",
   premioNote:  "Realizzato da SCINTILLA.DIGITAL.WEB — design, dominio e messa online inclusi.",
-  dataEstrazione: "",            // es. "24 dicembre 2026" — lascia vuoto per nasconderlo
+  dataEstrazione: "24 dicembre 2026",   // primo estratto Ruota di Napoli
   costo:       "Prenotazione gratuita",   // es. "Offerta libera" / "5€ a numero" / "Prenotazione gratuita"
 
   brand:       "SCINTILLA.DIGITAL.WEB",
@@ -524,34 +525,25 @@ function renderTable(){
 
 document.getElementById('refreshBtn').onclick=refresh;
 
-document.getElementById('drawBtn').onclick=()=>{
-  const rows=Object.values(reservations);
-  if(rows.length===0){ alert('Non ci sono ancora numeri prenotati da estrarre.'); return; }
-  const btn=document.getElementById('drawBtn'); btn.disabled=true;
+function showWinner(){
+  const n=parseInt(document.getElementById('winInput').value,10);
   const numEl=document.getElementById('drawNum');
   const nameEl=document.getElementById('drawName');
   const contactEl=document.getElementById('drawContact');
-  nameEl.textContent=''; contactEl.textContent='';
-  const winner=rows[Math.floor(Math.random()*rows.length)];
-  let ticks=0; const max=28;
-  const spin=setInterval(()=>{
-    numEl.textContent=rows[Math.floor(Math.random()*rows.length)].numero;
-    ticks++;
-    if(ticks>=max){
-      clearInterval(spin);
-      numEl.textContent=winner.numero;
-      nameEl.textContent='🏆 '+(winner.nome||'');
-      const digits=(winner.contatto||'').replace(/\D/g,'');
-      const wa=digits.length>=9?(digits.startsWith('39')?digits:'39'+digits):'';
-      contactEl.innerHTML = wa?`<a href="https://wa.me/${wa}" target="_blank" rel="noopener">${winner.contatto}</a>`:(winner.contatto||'');
-      // evidenzia sul cartellone
-      document.querySelectorAll('.cell.win').forEach(c=>c.classList.remove('win'));
-      const cell=document.querySelector(`.cell[data-n="${winner.numero}"]`); if(cell)cell.classList.add('win');
-      fireConfetti(2200);
-      btn.disabled=false;
-    }
-  },70);
-};
+  if(!n||n<1||n>90){ numEl.textContent='—'; nameEl.textContent='Inserisci un numero da 1 a 90'; contactEl.textContent=''; return; }
+  numEl.textContent=n;
+  document.querySelectorAll('.cell.win').forEach(c=>c.classList.remove('win'));
+  const cell=document.querySelector(`.cell[data-n="${n}"]`); if(cell)cell.classList.add('win');
+  const winner=reservations[n];
+  if(!winner){ nameEl.textContent='Numero non prenotato — nessun vincitore'; contactEl.textContent=''; return; }
+  nameEl.textContent='🏆 '+(winner.nome||'');
+  const digits=(winner.contatto||'').replace(/\D/g,'');
+  const wa=digits.length>=9?(digits.startsWith('39')?digits:'39'+digits):'';
+  contactEl.innerHTML = (wa?`<a href="https://wa.me/${wa}" target="_blank" rel="noopener">${winner.contatto}</a>`:(winner.contatto||''))+(winner.email?` · ${winner.email}`:'');
+  fireConfetti(2200);
+}
+document.getElementById('winBtn').onclick=showWinner;
+document.getElementById('winInput').addEventListener('keydown',e=>{ if(e.key==='Enter') showWinner(); });
 
 document.getElementById('csvBtn').onclick=()=>{
   const rows=Object.values(reservations).sort((a,b)=>a.numero-b.numero);
