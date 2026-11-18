@@ -109,19 +109,14 @@ body::after{
 .phone .notch{position:absolute;top:18px;left:50%;transform:translateX(-50%);width:62px;height:6px;border-radius:999px;background:#000;z-index:3}
 .phone .screen{position:relative;width:184px;height:392px;border-radius:24px;overflow:hidden;background:#fff}
 .phone .screen::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);border-radius:24px}
-/* l'iframe rende alla larghezza reale di un telefono (390px) e viene ridotto
-   per stare nello schermo (184px): layout mobile vero, non "zoomato".
-   Lo scroll parte GIÀ oltre l'hero (salta il video a tutto schermo) e si muove
-   a velocità costante attraverso le sezioni, così sembra sempre un sito. */
-.phone .screen iframe{
-  position:absolute;top:0;left:0;width:390px;height:2600px;border:0;background:#fff;
-  transform-origin:top left;pointer-events:none;
-  animation:scrollscreen 22s linear infinite alternate;animation-delay:var(--d,0s);
+/* screenshot reale del sito: hero in cima (object-position top ritaglia i
+   banner cookie che stanno più in basso) con un leggero movimento verticale */
+.phone .screen img{
+  position:absolute;top:0;left:0;width:100%;height:auto;display:block;
+  animation:heropan 20s ease-in-out infinite alternate;animation-delay:var(--d,0s);
 }
-@keyframes scrollscreen{
-  from{transform:scale(.4718) translateY(-560px)}
-  to{transform:scale(.4718) translateY(-1720px)}
-}
+@keyframes heropan{from{transform:translateY(0)}to{transform:translateY(-115px)}}
+@media(prefers-reduced-motion:reduce){.phone .screen img{animation:none}}
 .phone figcaption{display:flex;flex-direction:column;gap:2px;margin-top:14px;padding-left:4px}
 .phone .pn{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px}
 .phone .pt{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.04em}
@@ -368,14 +363,15 @@ const CONFIG = {
   whatsapp:    "393762474257",
   adminPin:    "1926",
 
-  // --- Vetrina: siti dei clienti mostrati nei telefoni (aggiungi/togli liberamente) ---
+  // --- Vetrina: screenshot dei siti nei telefoni (aggiungi/togli liberamente) ---
   siti: [
-    { nome: "Anita Bistrot",     tipo: "Lounge-bistrot",     url: "https://anitabistrot.it" },
-    { nome: "Bonsai",            tipo: "Cocktail bar",       url: "https://bonsaicocktailbar.it" },
-    { nome: "Il Posto Giusto",   tipo: "Pesce & Pizza",      url: "https://ilpostogiustodiaversa.com" },
-    { nome: "Stany Art & Enjoy", tipo: "Hair spa & beauty",  url: "https://stanyartenjoy.it" },
-    { nome: "Caruso Saloon",     tipo: "Luxury hair spa",    url: "https://carusosaloon.it" },
-    { nome: "Atelier Amirante",  tipo: "Sartoria sposa",     url: "https://amiranteatelier.it" }
+    { nome: "Anita Bistrot",     tipo: "Lounge-bistrot",     img: "showcase/anita.jpg" },
+    { nome: "Bonsai",            tipo: "Cocktail bar",       img: "showcase/bonsai.jpg" },
+    { nome: "Il Posto Giusto",   tipo: "Pesce & Pizza",      img: "showcase/ilpostogiusto.jpg" },
+    { nome: "KouSushi",          tipo: "Sushi",              img: "showcase/kousushi.jpg" },
+    { nome: "Stany Art & Enjoy", tipo: "Hair spa & beauty",  img: "showcase/stany.jpg" },
+    { nome: "Caruso Saloon",     tipo: "Luxury hair spa",    img: "showcase/caruso.jpg" },
+    { nome: "Atelier Amirante",  tipo: "Sartoria sposa",     img: "showcase/atelier.jpg" }
   ],
 
   supabaseUrl: "https://qorswaabqqcxpsmngbpo.supabase.co",
@@ -418,11 +414,11 @@ function renderShowcase(){
   const track = document.getElementById("phoneTrack");
   if(!track) return;
   track.innerHTML = CONFIG.siti.map((s,i)=>`
-    <figure class="phone" style="--d:${(i*2.4).toFixed(1)}s">
+    <figure class="phone" style="--d:${(i*2.2).toFixed(1)}s">
       <div class="frame">
         <span class="notch"></span>
         <div class="screen">
-          <iframe src="${s.url}" title="${esc(s.nome)}" loading="lazy" tabindex="-1" scrolling="no" referrerpolicy="no-referrer"></iframe>
+          <img src="${s.img}" alt="${esc(s.nome)}" loading="lazy">
         </div>
       </div>
       <figcaption><span class="pn">${esc(s.nome)}</span><span class="pt">${esc(s.tipo)}</span></figcaption>
