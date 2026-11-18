@@ -171,9 +171,10 @@ body::after{
 @media(max-width:420px){.board{grid-template-columns:repeat(5,1fr);gap:6px}}
 
 /* ---------- FOOTER ---------- */
-.foot{margin-top:60px;padding-top:26px;border-top:1px solid var(--line);text-align:center;font-family:'Space Mono',monospace;color:var(--muted);font-size:12.5px}
+.foot{margin-top:60px;padding-top:26px;border-top:1px solid var(--line);text-align:center;font-family:'Space Mono',monospace;color:var(--muted);font-size:12.5px;overflow-wrap:anywhere}
 .foot a{color:var(--spark);text-decoration:none}
 .foot .sep{opacity:.4;margin:0 9px}
+#footBrand{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;row-gap:4px}
 .reserved-link{display:block;margin:16px auto 0;background:none;border:none;color:var(--faint);font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;letter-spacing:.06em}
 .reserved-link:hover{color:var(--muted)}
 
