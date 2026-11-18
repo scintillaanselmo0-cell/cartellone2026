@@ -15,7 +15,9 @@ const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...cors, "Content-Type": "application/json" } });
 
 const stripe = new Stripe(Deno.env.get("CART_STRIPE_SECRET_KEY")!, { apiVersion: "2024-06-20" });
-const PREZZO = parseInt(Deno.env.get("PREZZO_CENTESIMI") || "1000", 10); // 10,00 €
+const PREZZO = parseInt(Deno.env.get("PREZZO_CENTESIMI") || "1000", 10); // NETTO per numero (10,00 €)
+const COMM_PCT = parseFloat(Deno.env.get("COMMISSIONE_PCT") || "0.015"); // commissione Stripe %
+const COMM_FIX = parseInt(Deno.env.get("COMMISSIONE_FISSA_CENT") || "25", 10); // commissione fissa per transazione
 const SITO = (Deno.env.get("SITO_URL") || "").replace(/\/$/, "");
 const supa = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
@@ -58,19 +60,22 @@ Deno.serve(async (req) => {
 
     // --- sessione Stripe Checkout ---
     const base = SITO || new URL(req.url).origin;
+    // Totale "lordato": il cliente copre la commissione Stripe, così restano PREZZO netti per numero.
+    const netto = nums.length * PREZZO;
+    const totale = Math.ceil((netto + COMM_FIX) / (1 - COMM_PCT));
     let session;
     try {
       session = await stripe.checkout.sessions.create({
         mode: "payment",
         customer_email: email,
         line_items: [{
-          quantity: nums.length,
+          quantity: 1,
           price_data: {
             currency: "eur",
-            unit_amount: PREZZO,
+            unit_amount: totale,
             product_data: {
-              name: "Cartellone della Fortuna — numero",
-              description: "Numeri scelti: " + nums.sort((a, b) => a - b).join(", "),
+              name: "Cartellone della Fortuna — " + nums.length + (nums.length === 1 ? " numero" : " numeri"),
+              description: "Numeri: " + nums.sort((a, b) => a - b).join(", ") + " (commissioni incluse)",
             },
           },
         }],

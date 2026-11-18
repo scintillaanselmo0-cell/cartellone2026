@@ -230,7 +230,7 @@ body{
     <label class="consent"><input type="checkbox" id="fConsent"><span>Acconsento a essere ricontattato per l'iniziativa e l'eventuale premio.</span></label>
     <button class="btn" id="payBtn">Paga <span id="payAmount"></span></button>
     <div class="msg" id="modalMsg"></div>
-    <div class="securenote">🔒 Pagamento sicuro con carta tramite Stripe</div>
+    <div class="securenote">Totale comprensivo dei costi di transazione · 🔒 Pagamento sicuro con carta tramite Stripe</div>
   </div>
 </div>
 
@@ -245,7 +245,9 @@ const CONFIG = {
   premio:      "Un sito web professionale su misura",
   premioNote:  "Realizzato da SCINTILLA.DIGITAL.WEB — design, dominio e messa online inclusi.",
   dataEstrazione: "24 dicembre 2026",
-  prezzoEuro:  10,
+  prezzoEuro:  10,          // NETTO che vuoi incassare per numero
+  commPct:     0.015,       // commissione Stripe % (carte europee)
+  commFissaCent: 25,        // commissione Stripe fissa per transazione (0,25 €)
 
   brand:       "SCINTILLA.DIGITAL.WEB",
   instagram:   "scintilla.digital.web",
@@ -263,6 +265,14 @@ let board = {};              // numero -> {status, nome}
 let selected = new Set();
 const sb = supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey);
 const euro = n => "€" + n.toLocaleString("it-IT");
+const euroC = c => (c/100).toLocaleString("it-IT", { style:"currency", currency:"EUR" });
+// Totale "lordato": partendo dal netto voluto, calcola quanto far pagare perché,
+// tolta la commissione Stripe (percentuale + fissa una volta), restino prezzoEuro*n netti.
+function totaleCent(n){
+  if(n<=0) return 0;
+  const base = n * CONFIG.prezzoEuro * 100;
+  return Math.ceil((base + CONFIG.commFissaCent) / (1 - CONFIG.commPct));
+}
 
 function firstName(s){ return (s||"").trim().split(/\s+/)[0] || ""; }
 
@@ -273,7 +283,7 @@ function renderStatic(){
   document.getElementById("premio").textContent = CONFIG.premio;
   document.getElementById("premioNote").textContent = CONFIG.premioNote;
   const chips = [];
-  chips.push(`<span class="chip">🎫 <b>${euro(CONFIG.prezzoEuro)}</b> a numero</span>`);
+  chips.push(`<span class="chip">🎫 <b>${euro(CONFIG.prezzoEuro)}</b> a numero + commissioni</span>`);
   if(CONFIG.dataEstrazione) chips.push(`<span class="chip">📅 Estrazione: <b>${CONFIG.dataEstrazione}</b></span>`);
   chips.push(`<span class="chip">🔢 <b>90</b> numeri in gioco</span>`);
   document.getElementById("meta").innerHTML = chips.join("");
@@ -328,7 +338,7 @@ function renderCart(){
   document.getElementById("cartCount").textContent = c;
   const nums = [...selected].sort((a,b)=>a-b);
   document.getElementById("cartNums").textContent = nums.length ? "N° " + nums.join(", ") : "";
-  document.getElementById("cartTot").textContent = euro(c * CONFIG.prezzoEuro);
+  document.getElementById("cartTot").textContent = euroC(totaleCent(c));
 }
 
 /* ---- CHECKOUT ---- */
@@ -342,7 +352,7 @@ function openCheckout(){
   if(selected.size===0) return;
   const nums = [...selected].sort((a,b)=>a-b);
   document.getElementById("modalNums").innerHTML = nums.map(n=>`<span>${n}</span>`).join("");
-  document.getElementById("payAmount").textContent = euro(selected.size * CONFIG.prezzoEuro);
+  document.getElementById("payAmount").textContent = euroC(totaleCent(selected.size));
   document.getElementById("modalMsg").textContent = "";
   document.getElementById("payBtn").disabled = false;
   overlay.classList.add("on");
