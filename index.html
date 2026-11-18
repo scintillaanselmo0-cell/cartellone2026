@@ -20,7 +20,7 @@
   --blue:#7aa2ff; --green:#49c17e; --amber:#d9a441; --red:#e2645f;
   --radius:16px;
 }
-*{box-sizing:border-box} html,body{margin:0;padding:0;overflow-x:hidden;max-width:100%}
+*{box-sizing:border-box} html,body{margin:0;padding:0;overflow-x:clip}
 body{
   font-family:'Inter',system-ui,sans-serif;
   background:var(--bg);
@@ -92,15 +92,14 @@ body::after{
 .sc-head{max-width:760px;margin-bottom:22px}
 .sc-head h2{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(24px,4vw,34px);letter-spacing:-.02em;margin:10px 0 0}
 .sc-head p{color:var(--muted);font-size:15px;margin:10px 0 0;max-width:560px}
-/* fila a tutta larghezza: estende esattamente del padding del contenitore
-   (niente 50vw, così non allarga la pagina) → arriva ai bordi dello schermo */
+/* fila a tutta larghezza fino ai bordi dello schermo (desktop e mobile).
+   overflow-x:clip su html/body evita lo scroll orizzontale della pagina. */
 .phonerow{
-  margin-left:calc(-1 * clamp(16px,4vw,28px));
-  margin-right:calc(-1 * clamp(16px,4vw,28px));
+  width:100vw;margin-left:calc(50% - 50vw);
   padding:14px 0;
   overflow:hidden;
 }
-.phonetrack{display:flex;gap:30px;width:max-content;
+.phonetrack{display:flex;gap:30px;width:max-content;will-change:transform;
   animation:marquee 60s linear infinite}
 .phonerow:hover .phonetrack{animation-play-state:paused}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -121,7 +120,7 @@ body::after{
    RALLENTA su scritte e contenuti del sito. */
 .phone .screen iframe{
   position:absolute;top:0;left:0;width:390px;height:2600px;border:0;background:#fff;
-  transform-origin:top left;pointer-events:none;
+  transform-origin:top left;pointer-events:none;will-change:transform;
   animation:scrollscreen 28s linear infinite alternate;animation-delay:var(--d,0s);
 }
 @keyframes scrollscreen{
