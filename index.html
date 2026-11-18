@@ -92,9 +92,11 @@ body::after{
 .sc-head{max-width:760px;margin-bottom:22px}
 .sc-head h2{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(24px,4vw,34px);letter-spacing:-.02em;margin:10px 0 0}
 .sc-head p{color:var(--muted);font-size:15px;margin:10px 0 0;max-width:560px}
-/* fila a tutta larghezza: i telefoni entrano/escono dai bordi dello schermo */
+/* fila a tutta larghezza: estende esattamente del padding del contenitore
+   (niente 50vw, così non allarga la pagina) → arriva ai bordi dello schermo */
 .phonerow{
-  margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);
+  margin-left:calc(-1 * clamp(16px,4vw,28px));
+  margin-right:calc(-1 * clamp(16px,4vw,28px));
   padding:14px 0;
   overflow:hidden;
 }
