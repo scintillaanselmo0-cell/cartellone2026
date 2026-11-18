@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Il Cartellone della Fortuna — Vinci il tuo sito web</title>
+
+<!-- ============================================================= -->
+<!-- SUPABASE (per rendere il cartellone PUBBLICO e CONDIVISO)      -->
+<!-- Lascialo così per provarlo in locale (modalità demo).         -->
+<!-- Per pubblicarlo: segui i 3 passi che ti ho dato e incolla     -->
+<!-- qui sotto URL e chiave anon del tuo progetto Supabase.        -->
+<!-- ============================================================= -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0b0f1a;
+  --bg2:#121829;
+  --card:#161d30;
+  --line:#2a3350;
+  --gold:#e8c66b;
+  --gold2:#c99a3a;
+  --gold-soft:rgba(232,198,107,.14);
+  --cream:#f4efe4;
+  --muted:#9aa3bd;
+  --green:#4ec07f;
+  --red:#e06b6b;
+  --shadow:0 18px 50px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:
+    radial-gradient(1100px 600px at 50% -10%, rgba(232,198,107,.10), transparent 60%),
+    radial-gradient(900px 500px at 100% 100%, rgba(80,120,255,.07), transparent 55%),
+    var(--bg);
+  color:var(--cream);
+  min-height:100vh;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:clamp(20px,4vw,48px) clamp(16px,4vw,28px) 80px}
+
+/* ---------- HEADER ---------- */
+.brandtop{display:flex;align-items:center;gap:10px;justify-content:center;color:var(--muted);
+  letter-spacing:.28em;font-size:11px;text-transform:uppercase;font-weight:600}
+.brandtop .dot{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.hero{text-align:center;margin-top:22px}
+.hero h1{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:700;
+  font-size:clamp(34px,7vw,62px);
+  line-height:1.02;
+  margin:6px 0 0;
+  letter-spacing:.5px;
+}
+.hero h1 .gold{color:var(--gold)}
+.hero p.sub{color:var(--muted);font-size:clamp(15px,2.3vw,18px);max-width:620px;margin:16px auto 0}
+
+/* ---------- PRIZE + RULES ---------- */
+.prize{
+  margin:30px auto 0;max-width:720px;
+  background:linear-gradient(180deg, rgba(232,198,107,.10), rgba(232,198,107,.02));
+  border:1px solid var(--gold-soft);
+  border-radius:18px;padding:22px 24px;
+  display:flex;gap:18px;align-items:center;
+}
+.prize .trophy{font-size:34px;filter:drop-shadow(0 6px 14px rgba(232,198,107,.35))}
+.prize .ptxt{text-align:left}
+.prize .plabel{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.prize .pmain{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3.4vw,27px);font-weight:600;margin-top:2px}
+.prize .pnote{color:var(--muted);font-size:13.5px;margin-top:4px}
+
+.meta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:20px auto 0;max-width:720px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 15px;font-size:13px;color:var(--cream);display:flex;gap:8px;align-items:center}
+.chip b{color:var(--gold)}
+
+/* ---------- PROGRESS ---------- */
+.progress{max-width:720px;margin:26px auto 0}
+.progress .ptop{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
+.progress .ptop b{color:var(--cream)}
+.bar{height:10px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);overflow:hidden}
+.bar > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold2),var(--gold));transition:width .6s cubic-bezier(.2,.8,.2,1)}
+
+/* ---------- BOARD ---------- */
+.boardhead{display:flex;align-items:baseline;justify-content:space-between;margin:40px auto 14px;max-width:920px}
+.boardhead h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;margin:0}
+.boardhead .legend{display:flex;gap:16px;font-size:12.5px;color:var(--muted)}
+.boardhead .legend i{width:12px;height:12px;border-radius:4px;display:inline-block;vertical-align:-1px;margin-right:6px}
+.lg-free{border:1.5px solid var(--gold);background:transparent}
+.lg-taken{background:linear-gradient(180deg,var(--gold),var(--gold2))}
+
+.board{
+  max-width:920px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(10,1fr);gap:10px;
+}
+.cell{
+  position:relative;
+  aspect-ratio:1/1;
+  border-radius:14px;
+  border:1.5px solid var(--line);
+  background:var(--card);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:transform .14s ease, box-shadow .14s ease, border-color .14s ease, background .14s ease;
+  user-select:none;
+  overflow:hidden;
+}
+.cell .num{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:clamp(16px,2.2vw,22px)}
+.cell.free{border-color:rgba(232,198,107,.55);color:var(--gold)}
+.cell.free:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(0,0,0,.4);background:var(--gold-soft);border-color:var(--gold)}
+.cell.taken{
+  cursor:default;
+  background:linear-gradient(180deg,var(--gold),var(--gold2));
+  border-color:var(--gold2);
+  color:#241a05;
+}
+.cell.taken .num{color:#241a05}
+.cell.taken .who{
+  font-size:9.5px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;
+  max-width:92%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  color:#3a2c08;margin-top:1px;
+}
+.cell.taken::after{content:"✓";position:absolute;top:5px;right:7px;font-size:10px;color:#3a2c08;opacity:.7}
+.cell.win{animation:winpulse 1s ease infinite;box-shadow:0 0 0 3px var(--gold), 0 0 30px var(--gold)}
+@keyframes winpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
+@media(max-width:720px){.board{grid-template-columns:repeat(6,1fr);gap:8px}.cell{border-radius:12px}}
+@media(max-width:420px){.board{grid-template-columns:repeat(5,1fr);gap:7px}}
+
+/* ---------- FOOTER ---------- */
+.foot{margin-top:56px;text-align:center;color:var(--muted);font-size:13px}
+.foot a{color:var(--gold);text-decoration:none}
+.foot .sep{opacity:.4;margin:0 8px}
+.reserved-link{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline;opacity:.5;margin-top:18px}
+.reserved-link:hover{opacity:1}
+.demo-banner{max-width:720px;margin:18px auto 0;background:rgba(224,107,107,.10);border:1px solid rgba(224,107,107,.4);color:#f0b8b8;border-radius:12px;padding:12px 16px;font-size:13px;text-align:center}
+.demo-banner b{color:#ffd0d0}
+
+/* ---------- MODAL ---------- */
+.overlay{position:fixed;inset:0;background:rgba(5,8,15,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+.overlay.on{display:flex}
+.modal{
+  background:var(--bg2);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);
+  width:100%;max-width:440px;padding:26px 24px;animation:pop .22s cubic-bezier(.2,.9,.3,1.2);
+}
+@keyframes pop{from{transform:translateY(14px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.modal h3{font-family:'Cormorant Garamond',serif;font-size:26px;margin:0 0 4px;font-weight:600}
+.modal h3 .n{color:var(--gold)}
+.modal p.m{color:var(--muted);font-size:14px;margin:0 0 18px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:500}
+.field input{
+  width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);
+  background:var(--card);color:var(--cream);font-size:15px;font-family:inherit;outline:none;
+}
+.field input:focus{border-color:var(--gold)}
+.consent{display:flex;gap:9px;align-items:flex-start;font-size:12px;color:var(--muted);margin:4px 0 18px}
+.consent input{margin-top:2px}
+.btn{
+  width:100%;padding:14px;border:none;border-radius:12px;cursor:pointer;
+  font-family:inherit;font-weight:700;font-size:15px;letter-spacing:.02em;
+  background:linear-gradient(180deg,var(--gold),var(--gold2));color:#241a05;
+  transition:transform .12s ease, filter .12s ease;
+}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--cream);margin-top:10px}
+.btn.ghost:hover{border-color:var(--gold)}
+.msg{font-size:13px;margin-top:12px;text-align:center;min-height:18px}
+.msg.err{color:var(--red)}
+.msg.ok{color:var(--green)}
+.close-x{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer}
+.modal{position:relative}
+.success-ico{font-size:46px;text-align:center;margin-bottom:6px}
+
+/* ---------- ADMIN ---------- */
+.admin{max-width:760px;margin:0 auto}
+.admin h3{font-family:'Cormorant Garamond',serif;font-size:28px;margin:0 0 2px;text-align:center}
+.admin .asub{color:var(--muted);font-size:13px;text-align:center;margin-bottom:20px}
+.draw-box{text-align:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 20px;margin-bottom:22px}
+.draw-num{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:700;color:var(--gold);line-height:1;min-height:76px}
+.draw-name{font-size:18px;font-weight:600;margin-top:6px}
+.draw-contact{color:var(--muted);font-size:14px;margin-top:2px}
+.draw-contact a{color:var(--gold);text-decoration:none}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+.tbl th,.tbl td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+.tbl th{color:var(--muted);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em}
+.tbl td a{color:var(--gold);text-decoration:none}
+.admin-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.admin-actions .btn{width:auto;padding:12px 20px}
+.tblwrap{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+.pin-wrap{max-width:320px;margin:40px auto;text-align:center}
+
+/* confetti canvas */
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:80;display:none}
+</style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="wrap" id="app">
+
+  <div class="brandtop"><span class="dot"></span><span id="brandTop"></span><span class="dot"></span></div>
+
+  <div class="hero">
+    <h1 id="titolo"></h1>
+    <p class="sub" id="sottotitolo"></p>
+  </div>
+
+  <div class="prize">
+    <div class="trophy">🏆</div>
+    <div class="ptxt">
+      <div class="plabel">In palio</div>
+      <div class="pmain" id="premio"></div>
+      <div class="pnote" id="premioNote"></div>
+    </div>
+  </div>
+
+  <div class="meta" id="meta"></div>
+
+  <div id="demoBanner" class="demo-banner" style="display:none">
+    ⚙️ <b>Modalità demo</b> — le prenotazioni restano solo su questo dispositivo. Configura Supabase per renderlo pubblico e condiviso (istruzioni nel file).
+  </div>
+
+  <div class="progress">
+    <div class="ptop"><span>Numeri prenotati</span><span><b id="countTaken">0</b> / 90</span></div>
+    <div class="bar"><span id="barFill"></span></div>
+  </div>
+
+  <div class="boardhead">
+    <h2>Scegli il tuo numero</h2>
+    <div class="legend">
+      <span><i class="lg-free"></i>Libero</span>
+      <span><i class="lg-taken"></i>Prenotato</span>
+    </div>
+  </div>
+
+  <div class="board" id="board"></div>
+
+  <div class="foot">
+    <div id="footBrand"></div>
+    <button class="reserved-link" id="adminBtn">Area riservata</button>
+  </div>
+</div>
+
+<!-- ADMIN VIEW -->
+<div class="wrap" id="adminView" style="display:none">
+  <div class="pin-wrap" id="pinWrap">
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;margin-bottom:14px">Area riservata</h3>
+    <div class="field"><input type="password" id="pinInput" placeholder="PIN"></div>
+    <button class="btn" id="pinBtn">Entra</button>
+    <div class="msg err" id="pinMsg"></div>
+    <button class="btn ghost" id="pinBack">← Torna al cartellone</button>
+  </div>
+
+  <div class="admin" id="adminPanel" style="display:none">
+    <h3>🎉 Estrazione & Prenotazioni</h3>
+    <div class="asub">Pannello privato — qui vedi i contatti ed estrai il vincitore.</div>
+
+    <div class="draw-box">
+      <div class="draw-num" id="drawNum">—</div>
+      <div class="draw-name" id="drawName"></div>
+      <div class="draw-contact" id="drawContact"></div>
+    </div>
+
+    <div class="admin-actions">
+      <button class="btn" id="drawBtn">🎰 Estrai il vincitore</button>
+      <button class="btn ghost" id="csvBtn">⬇ Esporta contatti (CSV)</button>
+      <button class="btn ghost" id="refreshBtn">↻ Aggiorna</button>
+      <button class="btn ghost" id="adminBack">← Cartellone</button>
+    </div>
+
+    <div class="tblwrap">
+      <table class="tbl">
+        <thead><tr><th>N°</th><th>Nome</th><th>Contatto</th><th>Quando</th></tr></thead>
+        <tbody id="tblBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- RESERVE MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <button class="close-x" id="closeX">×</button>
+    <div id="formView">
+      <h3>Prenoti il numero <span class="n" id="modalNum">—</span></h3>
+      <p class="m">Lascia i tuoi dati: se il tuo numero viene estratto, vinci il premio.</p>
+      <div class="field"><label>Nome e cognome</label><input id="fNome" autocomplete="name" placeholder="Es. Mario Rossi"></div>
+      <div class="field"><label>Telefono / WhatsApp</label><input id="fTel" inputmode="tel" autocomplete="tel" placeholder="Es. 333 1234567"></div>
+      <div class="field"><label>Email <span style="opacity:.5">(facoltativa)</span></label><input id="fEmail" type="email" autocomplete="email" placeholder="nome@email.it"></div>
+      <label class="consent"><input type="checkbox" id="fConsent"><span>Acconsento a essere ricontattato per l'iniziativa e l'eventuale premio.</span></label>
+      <button class="btn" id="confirmBtn">Conferma prenotazione</button>
+      <div class="msg" id="modalMsg"></div>
+    </div>
+    <div id="okView" style="display:none">
+      <div class="success-ico">🎟️</div>
+      <h3 style="text-align:center">Numero <span class="n" id="okNum"></span> è tuo!</h3>
+      <p class="m" style="text-align:center">Prenotazione registrata. In bocca al lupo per l'estrazione!</p>
+      <a class="btn" id="okWa" style="display:block;text-decoration:none;text-align:center">💬 Scrivici su WhatsApp</a>
+      <button class="btn ghost" id="okClose">Chiudi</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================= */
+/*  CONFIGURAZIONE — modifica solo questa parte                  */
+/* ============================================================= */
+const CONFIG = {
+  brandTop:    "SCINTILLA · DIGITAL · WEB",
+  titolo:      'Il Cartellone della <span class="gold">Fortuna</span>',
+  sottotitolo: "Prenota un numero da 1 a 90. Il numero estratto si aggiudica un sito web professionale, tutto suo.",
+  premio:      "Un sito web professionale su misura",
+  premioNote:  "Realizzato da SCINTILLA.DIGITAL.WEB — design, dominio e messa online inclusi.",
+  dataEstrazione: "",            // es. "24 dicembre 2026" — lascia vuoto per nasconderlo
+  costo:       "Prenotazione gratuita",   // es. "Offerta libera" / "5€ a numero" / "Prenotazione gratuita"
+
+  brand:       "SCINTILLA.DIGITAL.WEB",
+  instagram:   "scintilla.digital.web",   // senza @
+  whatsapp:    "393762474257",            // formato internazionale senza + né spazi
+
+  adminPin:    "1926",                    // ⚠️ CAMBIALO
+
+  // --- Supabase (collegato) ---
+  supabaseUrl: "https://wpuyvrmqrbwauobdzzyy.supabase.co",
+  supabaseKey: "sb_publishable_E9ZMJr6i5UBLlWDv_0gXcw_bGgdYQLC"
+};
+/* ============================================================= */
+
+const TOTAL = 90;
+let reservations = {}; // numero -> {nome, contatto, email, created_at}
+let selected = null;
+let sb = null;
+const USE_SB = !!(CONFIG.supabaseUrl && CONFIG.supabaseKey);
+
+/* ---------- STORE (Supabase oppure demo localStorage) ---------- */
+const store = {
+  async init(){
+    if(USE_SB && window.supabase){
+      sb = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey);
+    }
+  },
+  async getAll(){
+    if(sb){
+      const {data, error} = await sb.from('prenotazioni').select('*');
+      if(error){ console.error(error); return reservations; }
+      const map = {};
+      data.forEach(r => map[r.numero] = r);
+      return map;
+    }
+    return JSON.parse(localStorage.getItem('cartellone90') || '{}');
+  },
+  async reserve(numero, payload){
+    if(sb){
+      const {error} = await sb.from('prenotazioni').insert([{numero, ...payload}]);
+      if(error){
+        if(error.code === '23505') return {ok:false, taken:true};
+        return {ok:false, msg:error.message};
+      }
+      return {ok:true};
+    }
+    // demo
+    const map = JSON.parse(localStorage.getItem('cartellone90') || '{}');
+    if(map[numero]) return {ok:false, taken:true};
+    map[numero] = {numero, ...payload, created_at:new Date().toISOString()};
+    localStorage.setItem('cartellone90', JSON.stringify(map));
+    return {ok:true};
+  }
+};
+
+/* ---------- RENDER ---------- */
+function firstName(s){ return (s||'').trim().split(/\s+/)[0] || ''; }
+
+function renderStatic(){
+  document.getElementById('brandTop').textContent = CONFIG.brandTop;
+  document.getElementById('titolo').innerHTML = CONFIG.titolo;
+  document.getElementById('sottotitolo').textContent = CONFIG.sottotitolo;
+  document.getElementById('premio').textContent = CONFIG.premio;
+  document.getElementById('premioNote').textContent = CONFIG.premioNote;
+
+  const meta = document.getElementById('meta');
+  const chips = [];
+  if(CONFIG.costo) chips.push(`<span class="chip">🎫 <b>${CONFIG.costo}</b></span>`);
+  if(CONFIG.dataEstrazione) chips.push(`<span class="chip">📅 Estrazione: <b>${CONFIG.dataEstrazione}</b></span>`);
+  chips.push(`<span class="chip">🔢 <b>90</b> numeri in gioco</span>`);
+  meta.innerHTML = chips.join('');
+
+  document.getElementById('footBrand').innerHTML =
+    `${CONFIG.brand}<span class="sep">·</span>`+
+    `<a href="https://instagram.com/${CONFIG.instagram}" target="_blank" rel="noopener">@${CONFIG.instagram}</a>`+
+    `<span class="sep">·</span>`+
+    `<a href="https://wa.me/${CONFIG.whatsapp}" target="_blank" rel="noopener">WhatsApp</a>`;
+
+  if(!USE_SB) document.getElementById('demoBanner').style.display='block';
+}
+
+function renderBoard(){
+  const board = document.getElementById('board');
+  board.innerHTML='';
+  let taken = 0;
+  for(let n=1;n<=TOTAL;n++){
+    const r = reservations[n];
+    const cell = document.createElement('div');
+    if(r){
+      taken++;
+      cell.className='cell taken';
+      cell.innerHTML = `<span class="num">${n}</span><span class="who">${firstName(r.nome)}</span>`;
+      cell.title = `Prenotato da ${r.nome}`;
+    } else {
+      cell.className='cell free';
+      cell.innerHTML = `<span class="num">${n}</span>`;
+      cell.addEventListener('click',()=>openModal(n));
+    }
+    cell.dataset.n=n;
+    board.appendChild(cell);
+  }
+  document.getElementById('countTaken').textContent = taken;
+  document.getElementById('barFill').style.width = (taken/TOTAL*100)+'%';
+}
+
+async function refresh(){
+  reservations = await store.getAll();
+  renderBoard();
+  if(document.getElementById('adminPanel').style.display==='block') renderTable();
+}
+
+/* ---------- MODAL ---------- */
+const overlay=document.getElementById('overlay');
+function openModal(n){
+  selected=n;
+  document.getElementById('modalNum').textContent=n;
+  document.getElementById('formView').style.display='block';
+  document.getElementById('okView').style.display='none';
+  document.getElementById('fNome').value='';
+  document.getElementById('fTel').value='';
+  document.getElementById('fEmail').value='';
+  document.getElementById('fConsent').checked=false;
+  document.getElementById('modalMsg').textContent='';
+  document.getElementById('confirmBtn').disabled=false;
+  overlay.classList.add('on');
+  setTimeout(()=>document.getElementById('fNome').focus(),60);
+}
+function closeModal(){ overlay.classList.remove('on'); selected=null; }
+document.getElementById('closeX').onclick=closeModal;
+document.getElementById('okClose').onclick=closeModal;
+overlay.addEventListener('click',e=>{ if(e.target===overlay) closeModal(); });
+
+document.getElementById('confirmBtn').onclick=async()=>{
+  const nome=document.getElementById('fNome').value.trim();
+  const tel=document.getElementById('fTel').value.trim();
+  const email=document.getElementById('fEmail').value.trim();
+  const consent=document.getElementById('fConsent').checked;
+  const msg=document.getElementById('modalMsg');
+  msg.className='msg';
+  if(nome.length<2){ msg.textContent='Inserisci il tuo nome.'; msg.className='msg err'; return; }
+  if(tel.replace(/\D/g,'').length<6){ msg.textContent='Inserisci un recapito valido.'; msg.className='msg err'; return; }
+  if(!consent){ msg.textContent='Serve il consenso per partecipare.'; msg.className='msg err'; return; }
+
+  const btn=document.getElementById('confirmBtn');
+  btn.disabled=true; msg.textContent='Prenotazione in corso…';
+  const res=await store.reserve(selected, {nome, contatto:tel, email});
+  if(res.ok){
+    document.getElementById('okNum').textContent=selected;
+    document.getElementById('okWa').href=`https://wa.me/${CONFIG.whatsapp}?text=`+encodeURIComponent(`Ciao! Ho prenotato il numero ${selected} del cartellone 🎟️`);
+    document.getElementById('formView').style.display='none';
+    document.getElementById('okView').style.display='block';
+    fireConfetti(900);
+    await refresh();
+  } else if(res.taken){
+    msg.textContent='Ops! Questo numero è stato appena preso. Scegline un altro.';
+    msg.className='msg err';
+    await refresh();
+    setTimeout(closeModal,1400);
+  } else {
+    msg.textContent='Errore: '+(res.msg||'riprova tra poco.');
+    msg.className='msg err';
+    btn.disabled=false;
+  }
+};
+
+/* ---------- ADMIN ---------- */
+const appView=document.getElementById('app');
+const adminView=document.getElementById('adminView');
+document.getElementById('adminBtn').onclick=()=>{ appView.style.display='none'; adminView.style.display='block'; document.getElementById('pinInput').focus(); window.scrollTo(0,0); };
+document.getElementById('pinBack').onclick=backToBoard;
+document.getElementById('adminBack').onclick=backToBoard;
+function backToBoard(){ adminView.style.display='none'; appView.style.display='block';
+  document.getElementById('adminPanel').style.display='none';
+  document.getElementById('pinWrap').style.display='block';
+  document.getElementById('pinInput').value=''; document.getElementById('pinMsg').textContent=''; }
+
+document.getElementById('pinBtn').onclick=unlock;
+document.getElementById('pinInput').addEventListener('keydown',e=>{if(e.key==='Enter')unlock();});
+async function unlock(){
+  if(document.getElementById('pinInput').value===CONFIG.adminPin){
+    document.getElementById('pinWrap').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    await refresh();
+  } else {
+    document.getElementById('pinMsg').textContent='PIN errato.';
+  }
+}
+
+function renderTable(){
+  const body=document.getElementById('tblBody');
+  const rows=Object.values(reservations).sort((a,b)=>a.numero-b.numero);
+  if(rows.length===0){ body.innerHTML='<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:20px">Ancora nessuna prenotazione.</td></tr>'; return; }
+  body.innerHTML=rows.map(r=>{
+    const digits=(r.contatto||'').replace(/\D/g,'');
+    const wa=digits.length>=9?`<a href="https://wa.me/${digits.startsWith('39')?digits:'39'+digits}" target="_blank" rel="noopener">${r.contatto}</a>`:r.contatto||'';
+    const when=r.created_at?new Date(r.created_at).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+    return `<tr><td><b style="color:var(--gold)">${r.numero}</b></td><td>${r.nome||''}</td><td>${wa}${r.email?'<br><span style=\"color:var(--muted);font-size:12px\">'+r.email+'</span>':''}</td><td style="color:var(--muted)">${when}</td></tr>`;
+  }).join('');
+}
+
+document.getElementById('refreshBtn').onclick=refresh;
+
+document.getElementById('drawBtn').onclick=()=>{
+  const rows=Object.values(reservations);
+  if(rows.length===0){ alert('Non ci sono ancora numeri prenotati da estrarre.'); return; }
+  const btn=document.getElementById('drawBtn'); btn.disabled=true;
+  const numEl=document.getElementById('drawNum');
+  const nameEl=document.getElementById('drawName');
+  const contactEl=document.getElementById('drawContact');
+  nameEl.textContent=''; contactEl.textContent='';
+  const winner=rows[Math.floor(Math.random()*rows.length)];
+  let ticks=0; const max=28;
+  const spin=setInterval(()=>{
+    numEl.textContent=rows[Math.floor(Math.random()*rows.length)].numero;
+    ticks++;
+    if(ticks>=max){
+      clearInterval(spin);
+      numEl.textContent=winner.numero;
+      nameEl.textContent='🏆 '+(winner.nome||'');
+      const digits=(winner.contatto||'').replace(/\D/g,'');
+      const wa=digits.length>=9?(digits.startsWith('39')?digits:'39'+digits):'';
+      contactEl.innerHTML = wa?`<a href="https://wa.me/${wa}" target="_blank" rel="noopener">${winner.contatto}</a>`:(winner.contatto||'');
+      // evidenzia sul cartellone
+      document.querySelectorAll('.cell.win').forEach(c=>c.classList.remove('win'));
+      const cell=document.querySelector(`.cell[data-n="${winner.numero}"]`); if(cell)cell.classList.add('win');
+      fireConfetti(2200);
+      btn.disabled=false;
+    }
+  },70);
+};
+
+document.getElementById('csvBtn').onclick=()=>{
+  const rows=Object.values(reservations).sort((a,b)=>a.numero-b.numero);
+  if(rows.length===0){ alert('Nessuna prenotazione da esportare.'); return; }
+  const head=['Numero','Nome','Contatto','Email','Data'];
+  const lines=rows.map(r=>[r.numero,r.nome||'',r.contatto||'',r.email||'',r.created_at||''].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));
+  const csv=[head.join(','),...lines].join('\n');
+  const blob=new Blob(["﻿"+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='prenotazioni-cartellone.csv'; a.click();
+};
+
+/* ---------- CONFETTI ---------- */
+function fireConfetti(duration){
+  const cv=document.getElementById('confetti');
+  const ctx=cv.getContext('2d');
+  cv.style.display='block';
+  cv.width=innerWidth; cv.height=innerHeight;
+  const cols=['#e8c66b','#c99a3a','#f4efe4','#4ec07f','#fff'];
+  const parts=Array.from({length:140},()=>({
+    x:Math.random()*cv.width, y:-20-Math.random()*cv.height*.3,
+    r:4+Math.random()*6, c:cols[Math.floor(Math.random()*cols.length)],
+    vy:2+Math.random()*4, vx:-2+Math.random()*4, rot:Math.random()*6, vr:-.2+Math.random()*.4
+  }));
+  const end=Date.now()+duration;
+  (function frame(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.fillStyle=p.c; ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6); ctx.restore();
+    });
+    if(Date.now()<end){ requestAnimationFrame(frame); }
+    else { cv.style.display='none'; ctx.clearRect(0,0,cv.width,cv.height); }
+  })();
+}
+
+/* ---------- BOOT ---------- */
+(async function(){
+  renderStatic();
+  await store.init();
+  await refresh();
+  // aggiornamento periodico per vedere le prenotazioni altrui (solo Supabase)
+  if(sb){
+    setInterval(refresh, 20000);
+    try{
+      sb.channel('prenotazioni-rt')
+        .on('postgres_changes',{event:'INSERT',schema:'public',table:'prenotazioni'},()=>refresh())
+        .subscribe();
+    }catch(e){/* realtime facoltativo */}
+  }
+})();
+</script>
+</body>
+</html>
