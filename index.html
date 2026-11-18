@@ -5,12 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Il Cartellone della Fortuna — Vinci il tuo sito web</title>
 
-<!-- ============================================================= -->
-<!-- SUPABASE (per rendere il cartellone PUBBLICO e CONDIVISO)      -->
-<!-- Lascialo così per provarlo in locale (modalità demo).         -->
-<!-- Per pubblicarlo: segui i 3 passi che ti ho dato e incolla     -->
-<!-- qui sotto URL e chiave anon del tuo progetto Supabase.        -->
-<!-- ============================================================= -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,168 +13,110 @@
 
 <style>
 :root{
-  --bg:#0b0f1a;
-  --bg2:#121829;
-  --card:#161d30;
-  --line:#2a3350;
-  --gold:#e8c66b;
-  --gold2:#c99a3a;
-  --gold-soft:rgba(232,198,107,.14);
-  --cream:#f4efe4;
-  --muted:#9aa3bd;
-  --green:#4ec07f;
-  --red:#e06b6b;
+  --bg:#0b0f1a; --bg2:#121829; --card:#161d30; --line:#2a3350;
+  --gold:#e8c66b; --gold2:#c99a3a; --gold-soft:rgba(232,198,107,.14);
+  --cream:#f4efe4; --muted:#9aa3bd; --green:#4ec07f; --red:#e06b6b; --amber:#d9a441;
   --shadow:0 18px 50px rgba(0,0,0,.45);
 }
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
+*{box-sizing:border-box} html,body{margin:0;padding:0}
 body{
   font-family:'Inter',system-ui,sans-serif;
-  background:
-    radial-gradient(1100px 600px at 50% -10%, rgba(232,198,107,.10), transparent 60%),
-    radial-gradient(900px 500px at 100% 100%, rgba(80,120,255,.07), transparent 55%),
-    var(--bg);
-  color:var(--cream);
-  min-height:100vh;
-  line-height:1.5;
-  -webkit-font-smoothing:antialiased;
+  background:radial-gradient(1100px 600px at 50% -10%, rgba(232,198,107,.10), transparent 60%),radial-gradient(900px 500px at 100% 100%, rgba(80,120,255,.07), transparent 55%),var(--bg);
+  color:var(--cream);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;
 }
-.wrap{max-width:1040px;margin:0 auto;padding:clamp(20px,4vw,48px) clamp(16px,4vw,28px) 80px}
-
-/* ---------- HEADER ---------- */
-.brandtop{display:flex;align-items:center;gap:10px;justify-content:center;color:var(--muted);
-  letter-spacing:.28em;font-size:11px;text-transform:uppercase;font-weight:600}
+.wrap{max-width:1040px;margin:0 auto;padding:clamp(20px,4vw,48px) clamp(16px,4vw,28px) 140px}
+.brandtop{display:flex;align-items:center;gap:10px;justify-content:center;color:var(--muted);letter-spacing:.28em;font-size:11px;text-transform:uppercase;font-weight:600}
 .brandtop .dot{width:5px;height:5px;border-radius:50%;background:var(--gold)}
 .hero{text-align:center;margin-top:22px}
-.hero h1{
-  font-family:'Cormorant Garamond',serif;
-  font-weight:700;
-  font-size:clamp(34px,7vw,62px);
-  line-height:1.02;
-  margin:6px 0 0;
-  letter-spacing:.5px;
-}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:clamp(34px,7vw,62px);line-height:1.02;margin:6px 0 0;letter-spacing:.5px}
 .hero h1 .gold{color:var(--gold)}
-.hero p.sub{color:var(--muted);font-size:clamp(15px,2.3vw,18px);max-width:620px;margin:16px auto 0}
-
-/* ---------- PRIZE + RULES ---------- */
-.prize{
-  margin:30px auto 0;max-width:720px;
-  background:linear-gradient(180deg, rgba(232,198,107,.10), rgba(232,198,107,.02));
-  border:1px solid var(--gold-soft);
-  border-radius:18px;padding:22px 24px;
-  display:flex;gap:18px;align-items:center;
-}
+.hero p.sub{color:var(--muted);font-size:clamp(15px,2.3vw,18px);max-width:640px;margin:16px auto 0}
+.prize{margin:30px auto 0;max-width:720px;background:linear-gradient(180deg, rgba(232,198,107,.10), rgba(232,198,107,.02));border:1px solid var(--gold-soft);border-radius:18px;padding:22px 24px;display:flex;gap:18px;align-items:center}
 .prize .trophy{font-size:34px;filter:drop-shadow(0 6px 14px rgba(232,198,107,.35))}
 .prize .ptxt{text-align:left}
 .prize .plabel{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700}
 .prize .pmain{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3.4vw,27px);font-weight:600;margin-top:2px}
 .prize .pnote{color:var(--muted);font-size:13.5px;margin-top:4px}
-
 .meta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:20px auto 0;max-width:720px}
 .chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 15px;font-size:13px;color:var(--cream);display:flex;gap:8px;align-items:center}
 .chip b{color:var(--gold)}
-
-/* ---------- PROGRESS ---------- */
 .progress{max-width:720px;margin:26px auto 0}
 .progress .ptop{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
 .progress .ptop b{color:var(--cream)}
 .bar{height:10px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);overflow:hidden}
 .bar > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold2),var(--gold));transition:width .6s cubic-bezier(.2,.8,.2,1)}
-
-/* ---------- BOARD ---------- */
-.boardhead{display:flex;align-items:baseline;justify-content:space-between;margin:40px auto 14px;max-width:920px}
+.boardhead{display:flex;align-items:baseline;justify-content:space-between;margin:40px auto 14px;max-width:920px;flex-wrap:wrap;gap:8px}
 .boardhead h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;margin:0}
-.boardhead .legend{display:flex;gap:16px;font-size:12.5px;color:var(--muted)}
+.boardhead .legend{display:flex;gap:14px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
 .boardhead .legend i{width:12px;height:12px;border-radius:4px;display:inline-block;vertical-align:-1px;margin-right:6px}
 .lg-free{border:1.5px solid var(--gold);background:transparent}
+.lg-sel{background:var(--cream)}
+.lg-pend{background:var(--amber)}
 .lg-taken{background:linear-gradient(180deg,var(--gold),var(--gold2))}
-
-.board{
-  max-width:920px;margin:0 auto;
-  display:grid;grid-template-columns:repeat(10,1fr);gap:10px;
-}
-.cell{
-  position:relative;
-  aspect-ratio:1/1;
-  border-radius:14px;
-  border:1.5px solid var(--line);
-  background:var(--card);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  cursor:pointer;
-  transition:transform .14s ease, box-shadow .14s ease, border-color .14s ease, background .14s ease;
-  user-select:none;
-  overflow:hidden;
-}
+.board{max-width:920px;margin:0 auto;display:grid;grid-template-columns:repeat(10,1fr);gap:10px}
+.cell{position:relative;aspect-ratio:1/1;border-radius:14px;border:1.5px solid var(--line);background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .14s,box-shadow .14s,border-color .14s,background .14s;user-select:none;overflow:hidden}
 .cell .num{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:clamp(16px,2.2vw,22px)}
 .cell.free{border-color:rgba(232,198,107,.55);color:var(--gold)}
 .cell.free:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(0,0,0,.4);background:var(--gold-soft);border-color:var(--gold)}
-.cell.taken{
-  cursor:default;
-  background:linear-gradient(180deg,var(--gold),var(--gold2));
-  border-color:var(--gold2);
-  color:#241a05;
-}
+.cell.sel{background:var(--cream);color:#1a1205;border-color:#fff;box-shadow:0 0 0 2px var(--gold)}
+.cell.sel .num{color:#1a1205}
+.cell.sel::after{content:"✓";position:absolute;top:5px;right:7px;font-size:11px;color:#1a1205;font-weight:800}
+.cell.pending{cursor:not-allowed;background:rgba(217,164,65,.18);border-color:var(--amber);color:var(--amber)}
+.cell.pending .st{font-size:8.5px;font-weight:700;text-transform:uppercase;margin-top:1px;letter-spacing:.02em}
+.cell.taken{cursor:default;background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--gold2);color:#241a05}
 .cell.taken .num{color:#241a05}
-.cell.taken .who{
-  font-size:9.5px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;
-  max-width:92%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  color:#3a2c08;margin-top:1px;
-}
+.cell.taken .who{font-size:9.5px;font-weight:700;text-transform:uppercase;max-width:92%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#3a2c08;margin-top:1px}
 .cell.taken::after{content:"✓";position:absolute;top:5px;right:7px;font-size:10px;color:#3a2c08;opacity:.7}
-.cell.win{animation:winpulse 1s ease infinite;box-shadow:0 0 0 3px var(--gold), 0 0 30px var(--gold)}
+.cell.win{animation:winpulse 1s ease infinite;box-shadow:0 0 0 3px var(--gold),0 0 30px var(--gold)}
 @keyframes winpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-
 @media(max-width:720px){.board{grid-template-columns:repeat(6,1fr);gap:8px}.cell{border-radius:12px}}
 @media(max-width:420px){.board{grid-template-columns:repeat(5,1fr);gap:7px}}
-
-/* ---------- FOOTER ---------- */
 .foot{margin-top:56px;text-align:center;color:var(--muted);font-size:13px}
 .foot a{color:var(--gold);text-decoration:none}
 .foot .sep{opacity:.4;margin:0 8px}
 .reserved-link{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline;opacity:.5;margin-top:18px}
 .reserved-link:hover{opacity:1}
-.demo-banner{max-width:720px;margin:18px auto 0;background:rgba(224,107,107,.10);border:1px solid rgba(224,107,107,.4);color:#f0b8b8;border-radius:12px;padding:12px 16px;font-size:13px;text-align:center}
-.demo-banner b{color:#ffd0d0}
+.banner{max-width:720px;margin:18px auto 0;border-radius:12px;padding:12px 16px;font-size:13.5px;text-align:center}
+.banner.err{background:rgba(224,107,107,.10);border:1px solid rgba(224,107,107,.4);color:#f0b8b8}
+.banner.ok{background:rgba(78,192,127,.10);border:1px solid rgba(78,192,127,.4);color:#b8f0cf}
 
-/* ---------- MODAL ---------- */
+/* CART BAR */
+.cartbar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(11,15,26,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line);transform:translateY(120%);transition:transform .28s cubic-bezier(.2,.9,.3,1.1)}
+.cartbar.on{transform:none}
+.cartbar .inner{max-width:920px;margin:0 auto;padding:14px clamp(16px,4vw,28px);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.cartbar .info{font-size:14px}
+.cartbar .info b{color:var(--gold)}
+.cartbar .nums{color:var(--muted);font-size:12.5px;margin-top:2px;max-width:420px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cartbar .tot{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--gold);margin-right:4px}
+.btn{padding:14px 22px;border:none;border-radius:12px;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;letter-spacing:.02em;background:linear-gradient(180deg,var(--gold),var(--gold2));color:#241a05;transition:transform .12s,filter .12s}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--cream)}
+.btn.ghost:hover{border-color:var(--gold)}
+
+/* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(5,8,15,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
 .overlay.on{display:flex}
-.modal{
-  background:var(--bg2);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);
-  width:100%;max-width:440px;padding:26px 24px;animation:pop .22s cubic-bezier(.2,.9,.3,1.2);
-}
+.modal{position:relative;background:var(--bg2);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);width:100%;max-width:460px;padding:26px 24px;animation:pop .22s cubic-bezier(.2,.9,.3,1.2)}
 @keyframes pop{from{transform:translateY(14px) scale(.97);opacity:0}to{transform:none;opacity:1}}
 .modal h3{font-family:'Cormorant Garamond',serif;font-size:26px;margin:0 0 4px;font-weight:600}
-.modal h3 .n{color:var(--gold)}
-.modal p.m{color:var(--muted);font-size:14px;margin:0 0 18px}
+.modal p.m{color:var(--muted);font-size:14px;margin:0 0 16px}
+.selnums{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}
+.selnums span{background:var(--gold-soft);border:1px solid var(--gold2);color:var(--gold);border-radius:8px;padding:4px 9px;font-weight:700;font-size:13px}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:500}
-.field input{
-  width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);
-  background:var(--card);color:var(--cream);font-size:15px;font-family:inherit;outline:none;
-}
+.field input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--cream);font-size:15px;font-family:inherit;outline:none}
 .field input:focus{border-color:var(--gold)}
 .consent{display:flex;gap:9px;align-items:flex-start;font-size:12px;color:var(--muted);margin:4px 0 18px}
 .consent input{margin-top:2px}
-.btn{
-  width:100%;padding:14px;border:none;border-radius:12px;cursor:pointer;
-  font-family:inherit;font-weight:700;font-size:15px;letter-spacing:.02em;
-  background:linear-gradient(180deg,var(--gold),var(--gold2));color:#241a05;
-  transition:transform .12s ease, filter .12s ease;
-}
-.btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
-.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--cream);margin-top:10px}
-.btn.ghost:hover{border-color:var(--gold)}
+.modal .btn{width:100%}
+.modal .btn.ghost{margin-top:10px}
 .msg{font-size:13px;margin-top:12px;text-align:center;min-height:18px}
-.msg.err{color:var(--red)}
-.msg.ok{color:var(--green)}
+.msg.err{color:var(--red)} .msg.ok{color:var(--green)}
 .close-x{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer}
-.modal{position:relative}
-.success-ico{font-size:46px;text-align:center;margin-bottom:6px}
+.securenote{font-size:11.5px;color:var(--muted);text-align:center;margin-top:12px}
 
-/* ---------- ADMIN ---------- */
+/* ADMIN */
 .admin{max-width:760px;margin:0 auto}
 .admin h3{font-family:'Cormorant Garamond',serif;font-size:28px;margin:0 0 2px;text-align:center}
 .admin .asub{color:var(--muted);font-size:13px;text-align:center;margin-bottom:20px}
@@ -188,33 +124,22 @@ body{
 .draw-num{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:700;color:var(--gold);line-height:1;min-height:76px}
 .draw-name{font-size:18px;font-weight:600;margin-top:6px}
 .draw-contact{color:var(--muted);font-size:14px;margin-top:2px}
-.draw-contact a{color:var(--gold);text-decoration:none}
-.tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
-.tbl th,.tbl td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
-.tbl th{color:var(--muted);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em}
-.tbl td a{color:var(--gold);text-decoration:none}
-.admin-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
-.admin-actions .btn{width:auto;padding:12px 20px}
-.tblwrap{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+.admin-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;margin-bottom:16px}
+.admin-actions .btn{width:auto}
 .pin-wrap{max-width:320px;margin:40px auto;text-align:center}
-
-/* confetti canvas */
+.pin-wrap .field{margin-bottom:14px}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:80;display:none}
 </style>
 </head>
 <body>
-
 <canvas id="confetti"></canvas>
 
 <div class="wrap" id="app">
-
   <div class="brandtop"><span class="dot"></span><span id="brandTop"></span><span class="dot"></span></div>
-
   <div class="hero">
     <h1 id="titolo"></h1>
     <p class="sub" id="sottotitolo"></p>
   </div>
-
   <div class="prize">
     <div class="trophy">🏆</div>
     <div class="ptxt">
@@ -223,12 +148,10 @@ body{
       <div class="pnote" id="premioNote"></div>
     </div>
   </div>
-
   <div class="meta" id="meta"></div>
 
-  <div id="demoBanner" class="demo-banner" style="display:none">
-    ⚙️ <b>Modalità demo</b> — le prenotazioni restano solo su questo dispositivo. Configura Supabase per renderlo pubblico e condiviso (istruzioni nel file).
-  </div>
+  <div id="okBanner" class="banner ok" style="display:none">✅ Pagamento ricevuto! I tuoi numeri sono prenotati. In bocca al lupo per l'estrazione 🍀</div>
+  <div id="cancelBanner" class="banner err" style="display:none">Pagamento annullato — i numeri che avevi scelto sono di nuovo liberi.</div>
 
   <div class="progress">
     <div class="ptop"><span>Numeri prenotati</span><span><b id="countTaken">0</b> / 90</span></div>
@@ -236,9 +159,11 @@ body{
   </div>
 
   <div class="boardhead">
-    <h2>Scegli il tuo numero</h2>
+    <h2>Scegli i tuoi numeri</h2>
     <div class="legend">
       <span><i class="lg-free"></i>Libero</span>
+      <span><i class="lg-sel"></i>Selezionato</span>
+      <span><i class="lg-pend"></i>In pagamento</span>
       <span><i class="lg-taken"></i>Prenotato</span>
     </div>
   </div>
@@ -251,350 +176,282 @@ body{
   </div>
 </div>
 
-<!-- ADMIN VIEW -->
+<!-- ADMIN -->
 <div class="wrap" id="adminView" style="display:none">
   <div class="pin-wrap" id="pinWrap">
     <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;margin-bottom:14px">Area riservata</h3>
     <div class="field"><input type="password" id="pinInput" placeholder="PIN"></div>
-    <button class="btn" id="pinBtn">Entra</button>
+    <button class="btn" id="pinBtn" style="width:100%">Entra</button>
     <div class="msg err" id="pinMsg"></div>
-    <button class="btn ghost" id="pinBack">← Torna al cartellone</button>
+    <button class="btn ghost" id="pinBack" style="width:100%;margin-top:10px">← Torna al cartellone</button>
   </div>
-
   <div class="admin" id="adminPanel" style="display:none">
-    <h3>🎉 Vincitore & Prenotazioni</h3>
-    <div class="asub">Il numero vincente è il primo estratto sulla Ruota di Napoli del 24/12/2026. Inseriscilo qui sotto per vedere chi ha vinto.</div>
-
+    <h3>🎉 Verifica il vincitore</h3>
+    <div class="asub">Il numero vincente è il primo estratto sulla Ruota di Napoli del 24/12/2026. Inseriscilo per vedere chi ha vinto. I contatti completi sono nel gestionale.</div>
     <div class="draw-box">
       <div class="draw-num" id="drawNum">—</div>
       <div class="draw-name" id="drawName"></div>
       <div class="draw-contact" id="drawContact"></div>
     </div>
-
     <div class="admin-actions">
       <input id="winInput" type="number" min="1" max="90" placeholder="N° estratto a Napoli" style="width:200px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--cream);font-size:15px;font-family:inherit;outline:none" />
-      <button class="btn" id="winBtn" style="width:auto;padding:14px 20px">Mostra vincitore</button>
-      <button class="btn ghost" id="csvBtn">⬇ Esporta contatti (CSV)</button>
+      <button class="btn" id="winBtn">Mostra vincitore</button>
       <button class="btn ghost" id="refreshBtn">↻ Aggiorna</button>
       <button class="btn ghost" id="adminBack">← Cartellone</button>
-    </div>
-
-    <div class="tblwrap">
-      <table class="tbl">
-        <thead><tr><th>N°</th><th>Nome</th><th>Contatto</th><th>Quando</th></tr></thead>
-        <tbody id="tblBody"></tbody>
-      </table>
     </div>
   </div>
 </div>
 
-<!-- RESERVE MODAL -->
+<!-- CART BAR -->
+<div class="cartbar" id="cartbar">
+  <div class="inner">
+    <div>
+      <div class="info"><b id="cartCount">0</b> numeri selezionati</div>
+      <div class="nums" id="cartNums"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="tot" id="cartTot">€0</span>
+      <button class="btn ghost" id="cartClear">Svuota</button>
+      <button class="btn" id="cartGo">Procedi al pagamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
 <div class="overlay" id="overlay">
-  <div class="modal" id="modal">
+  <div class="modal">
     <button class="close-x" id="closeX">×</button>
-    <div id="formView">
-      <h3>Prenoti il numero <span class="n" id="modalNum">—</span></h3>
-      <p class="m">Lascia i tuoi dati: se il tuo numero viene estratto, vinci il premio.</p>
-      <div class="field"><label>Nome e cognome</label><input id="fNome" autocomplete="name" placeholder="Es. Mario Rossi"></div>
-      <div class="field"><label>Telefono / WhatsApp</label><input id="fTel" inputmode="tel" autocomplete="tel" placeholder="Es. 333 1234567"></div>
-      <div class="field"><label>Email <span style="opacity:.5">(facoltativa)</span></label><input id="fEmail" type="email" autocomplete="email" placeholder="nome@email.it"></div>
-      <label class="consent"><input type="checkbox" id="fConsent"><span>Acconsento a essere ricontattato per l'iniziativa e l'eventuale premio.</span></label>
-      <button class="btn" id="confirmBtn">Conferma prenotazione</button>
-      <div class="msg" id="modalMsg"></div>
-    </div>
-    <div id="okView" style="display:none">
-      <div class="success-ico">🎟️</div>
-      <h3 style="text-align:center">Numero <span class="n" id="okNum"></span> è tuo!</h3>
-      <p class="m" style="text-align:center">Prenotazione registrata. In bocca al lupo per l'estrazione!</p>
-      <a class="btn" id="okWa" style="display:block;text-decoration:none;text-align:center">💬 Scrivici su WhatsApp</a>
-      <button class="btn ghost" id="okClose">Chiudi</button>
-    </div>
+    <h3>Completa l'acquisto</h3>
+    <p class="m">I numeri restano riservati per te durante il pagamento.</p>
+    <div class="selnums" id="modalNums"></div>
+    <div class="field"><label>Nome e cognome</label><input id="fNome" autocomplete="name" placeholder="Es. Mario Rossi"></div>
+    <div class="field"><label>Telefono / WhatsApp</label><input id="fTel" inputmode="tel" autocomplete="tel" placeholder="Es. 333 1234567"></div>
+    <div class="field"><label>Email <span style="opacity:.5">(per la ricevuta)</span></label><input id="fEmail" type="email" autocomplete="email" placeholder="nome@email.it"></div>
+    <label class="consent"><input type="checkbox" id="fConsent"><span>Acconsento a essere ricontattato per l'iniziativa e l'eventuale premio.</span></label>
+    <button class="btn" id="payBtn">Paga <span id="payAmount"></span></button>
+    <div class="msg" id="modalMsg"></div>
+    <div class="securenote">🔒 Pagamento sicuro con carta tramite Stripe</div>
   </div>
 </div>
 
 <script>
 /* ============================================================= */
-/*  CONFIGURAZIONE — modifica solo questa parte                  */
+/*  CONFIGURAZIONE                                               */
 /* ============================================================= */
 const CONFIG = {
   brandTop:    "SCINTILLA · DIGITAL · WEB",
   titolo:      'Il Cartellone della <span class="gold">Fortuna</span>',
-  sottotitolo: "Prenota un numero da 1 a 90. Vince chi ha scelto il numero uguale al primo estratto sulla Ruota di Napoli del Lotto di mercoledì 24 dicembre 2026.",
+  sottotitolo: "Acquista uno o più numeri da 1 a 90. Vince chi ha il numero uguale al primo estratto sulla Ruota di Napoli del Lotto di mercoledì 24 dicembre 2026.",
   premio:      "Un sito web professionale su misura",
   premioNote:  "Realizzato da SCINTILLA.DIGITAL.WEB — design, dominio e messa online inclusi.",
-  dataEstrazione: "24 dicembre 2026",   // primo estratto Ruota di Napoli
-  costo:       "Prenotazione gratuita",   // es. "Offerta libera" / "5€ a numero" / "Prenotazione gratuita"
+  dataEstrazione: "24 dicembre 2026",
+  prezzoEuro:  10,
 
   brand:       "SCINTILLA.DIGITAL.WEB",
-  instagram:   "scintilla.digital.web",   // senza @
-  whatsapp:    "393762474257",            // formato internazionale senza + né spazi
+  instagram:   "scintilla.digital.web",
+  whatsapp:    "393762474257",
+  adminPin:    "1926",
 
-  adminPin:    "1926",                    // ⚠️ CAMBIALO
-
-  // --- Supabase (progetto Scintilla, tabella cartellone_prenotazioni) ---
   supabaseUrl: "https://qorswaabqqcxpsmngbpo.supabase.co",
-  supabaseKey: "sb_publishable_xoKJtS9w_kv_dddgGl8Ycg_BC2UM0w6"
+  supabaseKey: "sb_publishable_xoKJtS9w_kv_dddgGl8Ycg_BC2UM0w6",
+  checkoutFn:  "cartellone-checkout"
 };
 /* ============================================================= */
 
 const TOTAL = 90;
-let reservations = {}; // numero -> {nome, contatto, email, created_at}
-let selected = null;
-let sb = null;
-const USE_SB = !!(CONFIG.supabaseUrl && CONFIG.supabaseKey);
+let board = {};              // numero -> {status, nome}
+let selected = new Set();
+const sb = supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey);
+const euro = n => "€" + n.toLocaleString("it-IT");
 
-/* ---------- STORE (Supabase oppure demo localStorage) ---------- */
-const store = {
-  async init(){
-    if(USE_SB && window.supabase){
-      sb = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey);
-    }
-  },
-  async getAll(){
-    if(sb){
-      const {data, error} = await sb.from('cartellone_prenotazioni').select('*');
-      if(error){ console.error(error); return reservations; }
-      const map = {};
-      data.forEach(r => map[r.numero] = r);
-      return map;
-    }
-    return JSON.parse(localStorage.getItem('cartellone90') || '{}');
-  },
-  async reserve(numero, payload){
-    if(sb){
-      const {error} = await sb.from('cartellone_prenotazioni').insert([{numero, ...payload}]);
-      if(error){
-        if(error.code === '23505') return {ok:false, taken:true};
-        return {ok:false, msg:error.message};
-      }
-      return {ok:true};
-    }
-    // demo
-    const map = JSON.parse(localStorage.getItem('cartellone90') || '{}');
-    if(map[numero]) return {ok:false, taken:true};
-    map[numero] = {numero, ...payload, created_at:new Date().toISOString()};
-    localStorage.setItem('cartellone90', JSON.stringify(map));
-    return {ok:true};
-  }
-};
-
-/* ---------- RENDER ---------- */
-function firstName(s){ return (s||'').trim().split(/\s+/)[0] || ''; }
+function firstName(s){ return (s||"").trim().split(/\s+/)[0] || ""; }
 
 function renderStatic(){
-  document.getElementById('brandTop').textContent = CONFIG.brandTop;
-  document.getElementById('titolo').innerHTML = CONFIG.titolo;
-  document.getElementById('sottotitolo').textContent = CONFIG.sottotitolo;
-  document.getElementById('premio').textContent = CONFIG.premio;
-  document.getElementById('premioNote').textContent = CONFIG.premioNote;
-
-  const meta = document.getElementById('meta');
+  document.getElementById("brandTop").textContent = CONFIG.brandTop;
+  document.getElementById("titolo").innerHTML = CONFIG.titolo;
+  document.getElementById("sottotitolo").textContent = CONFIG.sottotitolo;
+  document.getElementById("premio").textContent = CONFIG.premio;
+  document.getElementById("premioNote").textContent = CONFIG.premioNote;
   const chips = [];
-  if(CONFIG.costo) chips.push(`<span class="chip">🎫 <b>${CONFIG.costo}</b></span>`);
+  chips.push(`<span class="chip">🎫 <b>${euro(CONFIG.prezzoEuro)}</b> a numero</span>`);
   if(CONFIG.dataEstrazione) chips.push(`<span class="chip">📅 Estrazione: <b>${CONFIG.dataEstrazione}</b></span>`);
   chips.push(`<span class="chip">🔢 <b>90</b> numeri in gioco</span>`);
-  meta.innerHTML = chips.join('');
+  document.getElementById("meta").innerHTML = chips.join("");
+  document.getElementById("footBrand").innerHTML =
+    `${CONFIG.brand}<span class="sep">·</span><a href="https://instagram.com/${CONFIG.instagram}" target="_blank" rel="noopener">@${CONFIG.instagram}</a><span class="sep">·</span><a href="https://wa.me/${CONFIG.whatsapp}" target="_blank" rel="noopener">WhatsApp</a>`;
+}
 
-  document.getElementById('footBrand').innerHTML =
-    `${CONFIG.brand}<span class="sep">·</span>`+
-    `<a href="https://instagram.com/${CONFIG.instagram}" target="_blank" rel="noopener">@${CONFIG.instagram}</a>`+
-    `<span class="sep">·</span>`+
-    `<a href="https://wa.me/${CONFIG.whatsapp}" target="_blank" rel="noopener">WhatsApp</a>`;
-
-  if(!USE_SB) document.getElementById('demoBanner').style.display='block';
+async function loadBoard(){
+  const { data, error } = await sb.from("cartellone_board").select("numero,status,nome");
+  const map = {};
+  if(!error && data) data.forEach(r => map[r.numero] = r);
+  board = map;
+  renderBoard();
 }
 
 function renderBoard(){
-  const board = document.getElementById('board');
-  board.innerHTML='';
+  const el = document.getElementById("board");
+  el.innerHTML = "";
   let taken = 0;
   for(let n=1;n<=TOTAL;n++){
-    const r = reservations[n];
-    const cell = document.createElement('div');
-    if(r){
+    const r = board[n];
+    const cell = document.createElement("div");
+    cell.dataset.n = n;
+    if(r && r.status === "paid"){
       taken++;
-      cell.className='cell taken';
+      cell.className = "cell taken";
       cell.innerHTML = `<span class="num">${n}</span><span class="who">${firstName(r.nome)}</span>`;
-      cell.title = `Prenotato da ${r.nome}`;
+    } else if(r && r.status === "pending"){
+      taken++;
+      cell.className = "cell pending";
+      cell.innerHTML = `<span class="num">${n}</span><span class="st">in pagam.</span>`;
     } else {
-      cell.className='cell free';
+      cell.className = "cell free" + (selected.has(n) ? " sel" : "");
       cell.innerHTML = `<span class="num">${n}</span>`;
-      cell.addEventListener('click',()=>openModal(n));
+      cell.addEventListener("click", ()=>toggle(n));
     }
-    cell.dataset.n=n;
-    board.appendChild(cell);
+    el.appendChild(cell);
   }
-  document.getElementById('countTaken').textContent = taken;
-  document.getElementById('barFill').style.width = (taken/TOTAL*100)+'%';
+  document.getElementById("countTaken").textContent = taken;
+  document.getElementById("barFill").style.width = (taken/TOTAL*100) + "%";
 }
 
-async function refresh(){
-  reservations = await store.getAll();
-  renderBoard();
-  if(document.getElementById('adminPanel').style.display==='block') renderTable();
+function toggle(n){
+  if(selected.has(n)) selected.delete(n); else selected.add(n);
+  renderBoard(); renderCart();
 }
 
-/* ---------- MODAL ---------- */
-const overlay=document.getElementById('overlay');
-function openModal(n){
-  selected=n;
-  document.getElementById('modalNum').textContent=n;
-  document.getElementById('formView').style.display='block';
-  document.getElementById('okView').style.display='none';
-  document.getElementById('fNome').value='';
-  document.getElementById('fTel').value='';
-  document.getElementById('fEmail').value='';
-  document.getElementById('fConsent').checked=false;
-  document.getElementById('modalMsg').textContent='';
-  document.getElementById('confirmBtn').disabled=false;
-  overlay.classList.add('on');
-  setTimeout(()=>document.getElementById('fNome').focus(),60);
+function renderCart(){
+  const bar = document.getElementById("cartbar");
+  const c = selected.size;
+  bar.classList.toggle("on", c>0);
+  document.getElementById("cartCount").textContent = c;
+  const nums = [...selected].sort((a,b)=>a-b);
+  document.getElementById("cartNums").textContent = nums.length ? "N° " + nums.join(", ") : "";
+  document.getElementById("cartTot").textContent = euro(c * CONFIG.prezzoEuro);
 }
-function closeModal(){ overlay.classList.remove('on'); selected=null; }
-document.getElementById('closeX').onclick=closeModal;
-document.getElementById('okClose').onclick=closeModal;
-overlay.addEventListener('click',e=>{ if(e.target===overlay) closeModal(); });
 
-document.getElementById('confirmBtn').onclick=async()=>{
-  const nome=document.getElementById('fNome').value.trim();
-  const tel=document.getElementById('fTel').value.trim();
-  const email=document.getElementById('fEmail').value.trim();
-  const consent=document.getElementById('fConsent').checked;
-  const msg=document.getElementById('modalMsg');
-  msg.className='msg';
-  if(nome.length<2){ msg.textContent='Inserisci il tuo nome.'; msg.className='msg err'; return; }
-  if(tel.replace(/\D/g,'').length<6){ msg.textContent='Inserisci un recapito valido.'; msg.className='msg err'; return; }
-  if(!consent){ msg.textContent='Serve il consenso per partecipare.'; msg.className='msg err'; return; }
+/* ---- CHECKOUT ---- */
+const overlay = document.getElementById("overlay");
+document.getElementById("cartGo").onclick = openCheckout;
+document.getElementById("cartClear").onclick = ()=>{ selected.clear(); renderBoard(); renderCart(); };
+document.getElementById("closeX").onclick = ()=>overlay.classList.remove("on");
+overlay.addEventListener("click", e=>{ if(e.target===overlay) overlay.classList.remove("on"); });
 
-  const btn=document.getElementById('confirmBtn');
-  btn.disabled=true; msg.textContent='Prenotazione in corso…';
-  const res=await store.reserve(selected, {nome, contatto:tel, email});
-  if(res.ok){
-    document.getElementById('okNum').textContent=selected;
-    document.getElementById('okWa').href=`https://wa.me/${CONFIG.whatsapp}?text=`+encodeURIComponent(`Ciao! Ho prenotato il numero ${selected} del cartellone 🎟️`);
-    document.getElementById('formView').style.display='none';
-    document.getElementById('okView').style.display='block';
-    fireConfetti(900);
-    await refresh();
-  } else if(res.taken){
-    msg.textContent='Ops! Questo numero è stato appena preso. Scegline un altro.';
-    msg.className='msg err';
-    await refresh();
-    setTimeout(closeModal,1400);
-  } else {
-    msg.textContent='Errore: '+(res.msg||'riprova tra poco.');
-    msg.className='msg err';
-    btn.disabled=false;
+function openCheckout(){
+  if(selected.size===0) return;
+  const nums = [...selected].sort((a,b)=>a-b);
+  document.getElementById("modalNums").innerHTML = nums.map(n=>`<span>${n}</span>`).join("");
+  document.getElementById("payAmount").textContent = euro(selected.size * CONFIG.prezzoEuro);
+  document.getElementById("modalMsg").textContent = "";
+  document.getElementById("payBtn").disabled = false;
+  overlay.classList.add("on");
+  setTimeout(()=>document.getElementById("fNome").focus(), 60);
+}
+
+document.getElementById("payBtn").onclick = async ()=>{
+  const nome = document.getElementById("fNome").value.trim();
+  const tel = document.getElementById("fTel").value.trim();
+  const email = document.getElementById("fEmail").value.trim();
+  const consent = document.getElementById("fConsent").checked;
+  const msg = document.getElementById("modalMsg"); msg.className = "msg";
+  if(nome.length<2){ msg.textContent="Inserisci il tuo nome."; msg.className="msg err"; return; }
+  if(tel.replace(/\D/g,"").length<6){ msg.textContent="Inserisci un recapito valido."; msg.className="msg err"; return; }
+  if(!/.+@.+\..+/.test(email)){ msg.textContent="Inserisci un'email valida per la ricevuta."; msg.className="msg err"; return; }
+  if(!consent){ msg.textContent="Serve il consenso per partecipare."; msg.className="msg err"; return; }
+
+  const btn = document.getElementById("payBtn"); btn.disabled = true;
+  msg.textContent = "Ti porto al pagamento…";
+  const numeri = [...selected].sort((a,b)=>a-b);
+  try{
+    const { data, error } = await sb.functions.invoke(CONFIG.checkoutFn, {
+      body: { numeri, nome, contatto:tel, email }
+    });
+    if(error) throw error;
+    if(data && data.taken){
+      msg.textContent = "Alcuni numeri sono stati appena presi: " + data.taken.join(", ") + ". Aggiorno la griglia.";
+      msg.className = "msg err";
+      await loadBoard();
+      data.taken.forEach(n=>selected.delete(Number(n)));
+      renderCart();
+      btn.disabled = false;
+      return;
+    }
+    if(data && data.url){ window.location.href = data.url; return; }
+    throw new Error("Risposta non valida dal server.");
+  }catch(e){
+    msg.textContent = "Errore nel pagamento. Riprova tra poco.";
+    msg.className = "msg err";
+    btn.disabled = false;
   }
 };
 
-/* ---------- ADMIN ---------- */
-const appView=document.getElementById('app');
-const adminView=document.getElementById('adminView');
-document.getElementById('adminBtn').onclick=()=>{ appView.style.display='none'; adminView.style.display='block'; document.getElementById('pinInput').focus(); window.scrollTo(0,0); };
-document.getElementById('pinBack').onclick=backToBoard;
-document.getElementById('adminBack').onclick=backToBoard;
-function backToBoard(){ adminView.style.display='none'; appView.style.display='block';
-  document.getElementById('adminPanel').style.display='none';
-  document.getElementById('pinWrap').style.display='block';
-  document.getElementById('pinInput').value=''; document.getElementById('pinMsg').textContent=''; }
-
-document.getElementById('pinBtn').onclick=unlock;
-document.getElementById('pinInput').addEventListener('keydown',e=>{if(e.key==='Enter')unlock();});
-async function unlock(){
-  if(document.getElementById('pinInput').value===CONFIG.adminPin){
-    document.getElementById('pinWrap').style.display='none';
-    document.getElementById('adminPanel').style.display='block';
-    await refresh();
-  } else {
-    document.getElementById('pinMsg').textContent='PIN errato.';
+/* ---- RITORNO DA STRIPE ---- */
+function handleReturn(){
+  const p = new URLSearchParams(location.search);
+  const stato = p.get("stato");
+  if(stato === "ok"){
+    document.getElementById("okBanner").style.display = "block";
+    fireConfetti(2400);
+    history.replaceState(null,"",location.pathname);
+  } else if(stato === "annullato"){
+    document.getElementById("cancelBanner").style.display = "block";
+    history.replaceState(null,"",location.pathname);
   }
 }
 
-function renderTable(){
-  const body=document.getElementById('tblBody');
-  const rows=Object.values(reservations).sort((a,b)=>a.numero-b.numero);
-  if(rows.length===0){ body.innerHTML='<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:20px">Ancora nessuna prenotazione.</td></tr>'; return; }
-  body.innerHTML=rows.map(r=>{
-    const digits=(r.contatto||'').replace(/\D/g,'');
-    const wa=digits.length>=9?`<a href="https://wa.me/${digits.startsWith('39')?digits:'39'+digits}" target="_blank" rel="noopener">${r.contatto}</a>`:r.contatto||'';
-    const when=r.created_at?new Date(r.created_at).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
-    return `<tr><td><b style="color:var(--gold)">${r.numero}</b></td><td>${r.nome||''}</td><td>${wa}${r.email?'<br><span style=\"color:var(--muted);font-size:12px\">'+r.email+'</span>':''}</td><td style="color:var(--muted)">${when}</td></tr>`;
-  }).join('');
+/* ---- ADMIN ---- */
+const appView = document.getElementById("app");
+const adminView = document.getElementById("adminView");
+document.getElementById("adminBtn").onclick = ()=>{ appView.style.display="none"; adminView.style.display="block"; document.getElementById("pinInput").focus(); scrollTo(0,0); };
+document.getElementById("pinBack").onclick = backToBoard;
+document.getElementById("adminBack").onclick = backToBoard;
+function backToBoard(){ adminView.style.display="none"; appView.style.display="block"; document.getElementById("adminPanel").style.display="none"; document.getElementById("pinWrap").style.display="block"; document.getElementById("pinInput").value=""; document.getElementById("pinMsg").textContent=""; }
+document.getElementById("pinBtn").onclick = unlock;
+document.getElementById("pinInput").addEventListener("keydown", e=>{ if(e.key==="Enter") unlock(); });
+async function unlock(){
+  if(document.getElementById("pinInput").value === CONFIG.adminPin){
+    document.getElementById("pinWrap").style.display="none";
+    document.getElementById("adminPanel").style.display="block";
+    await loadBoard();
+  } else document.getElementById("pinMsg").textContent = "PIN errato.";
 }
-
-document.getElementById('refreshBtn').onclick=refresh;
-
+document.getElementById("refreshBtn").onclick = loadBoard;
 function showWinner(){
-  const n=parseInt(document.getElementById('winInput').value,10);
-  const numEl=document.getElementById('drawNum');
-  const nameEl=document.getElementById('drawName');
-  const contactEl=document.getElementById('drawContact');
-  if(!n||n<1||n>90){ numEl.textContent='—'; nameEl.textContent='Inserisci un numero da 1 a 90'; contactEl.textContent=''; return; }
-  numEl.textContent=n;
-  document.querySelectorAll('.cell.win').forEach(c=>c.classList.remove('win'));
-  const cell=document.querySelector(`.cell[data-n="${n}"]`); if(cell)cell.classList.add('win');
-  const winner=reservations[n];
-  if(!winner){ nameEl.textContent='Numero non prenotato — nessun vincitore'; contactEl.textContent=''; return; }
-  nameEl.textContent='🏆 '+(winner.nome||'');
-  const digits=(winner.contatto||'').replace(/\D/g,'');
-  const wa=digits.length>=9?(digits.startsWith('39')?digits:'39'+digits):'';
-  contactEl.innerHTML = (wa?`<a href="https://wa.me/${wa}" target="_blank" rel="noopener">${winner.contatto}</a>`:(winner.contatto||''))+(winner.email?` · ${winner.email}`:'');
+  const n = parseInt(document.getElementById("winInput").value, 10);
+  const numEl=document.getElementById("drawNum"), nameEl=document.getElementById("drawName"), contactEl=document.getElementById("drawContact");
+  if(!n||n<1||n>90){ numEl.textContent="—"; nameEl.textContent="Inserisci un numero da 1 a 90"; contactEl.textContent=""; return; }
+  numEl.textContent = n;
+  document.querySelectorAll(".cell.win").forEach(c=>c.classList.remove("win"));
+  const r = board[n];
+  if(!r || r.status!=="paid"){ nameEl.textContent="Numero non acquistato — nessun vincitore"; contactEl.textContent=""; return; }
+  nameEl.textContent = "🏆 " + firstName(r.nome);
+  contactEl.textContent = "Contatto completo nel gestionale Scintilla";
   fireConfetti(2200);
 }
-document.getElementById('winBtn').onclick=showWinner;
-document.getElementById('winInput').addEventListener('keydown',e=>{ if(e.key==='Enter') showWinner(); });
+document.getElementById("winBtn").onclick = showWinner;
+document.getElementById("winInput").addEventListener("keydown", e=>{ if(e.key==="Enter") showWinner(); });
 
-document.getElementById('csvBtn').onclick=()=>{
-  const rows=Object.values(reservations).sort((a,b)=>a.numero-b.numero);
-  if(rows.length===0){ alert('Nessuna prenotazione da esportare.'); return; }
-  const head=['Numero','Nome','Contatto','Email','Data'];
-  const lines=rows.map(r=>[r.numero,r.nome||'',r.contatto||'',r.email||'',r.created_at||''].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));
-  const csv=[head.join(','),...lines].join('\n');
-  const blob=new Blob(["﻿"+csv],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob); a.download='prenotazioni-cartellone.csv'; a.click();
-};
-
-/* ---------- CONFETTI ---------- */
+/* ---- CONFETTI ---- */
 function fireConfetti(duration){
-  const cv=document.getElementById('confetti');
-  const ctx=cv.getContext('2d');
-  cv.style.display='block';
-  cv.width=innerWidth; cv.height=innerHeight;
-  const cols=['#e8c66b','#c99a3a','#f4efe4','#4ec07f','#fff'];
-  const parts=Array.from({length:140},()=>({
-    x:Math.random()*cv.width, y:-20-Math.random()*cv.height*.3,
-    r:4+Math.random()*6, c:cols[Math.floor(Math.random()*cols.length)],
-    vy:2+Math.random()*4, vx:-2+Math.random()*4, rot:Math.random()*6, vr:-.2+Math.random()*.4
-  }));
+  const cv=document.getElementById("confetti"), ctx=cv.getContext("2d");
+  cv.style.display="block"; cv.width=innerWidth; cv.height=innerHeight;
+  const cols=["#e8c66b","#c99a3a","#f4efe4","#4ec07f","#fff"];
+  const parts=Array.from({length:140},()=>({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.3,r:4+Math.random()*6,c:cols[Math.floor(Math.random()*cols.length)],vy:2+Math.random()*4,vx:-2+Math.random()*4,rot:Math.random()*6,vr:-.2+Math.random()*.4}));
   const end=Date.now()+duration;
-  (function frame(){
-    ctx.clearRect(0,0,cv.width,cv.height);
-    parts.forEach(p=>{
-      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
-      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
-      ctx.fillStyle=p.c; ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6); ctx.restore();
-    });
-    if(Date.now()<end){ requestAnimationFrame(frame); }
-    else { cv.style.display='none'; ctx.clearRect(0,0,cv.width,cv.height); }
+  (function frame(){ ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);ctx.restore();});
+    if(Date.now()<end) requestAnimationFrame(frame); else { cv.style.display="none"; ctx.clearRect(0,0,cv.width,cv.height); }
   })();
 }
 
-/* ---------- BOOT ---------- */
+/* ---- BOOT ---- */
 (async function(){
   renderStatic();
-  await store.init();
-  await refresh();
-  // aggiornamento periodico per vedere le prenotazioni altrui (solo Supabase)
-  if(sb){
-    setInterval(refresh, 20000);
-    try{
-      sb.channel('cartellone-rt')
-        .on('postgres_changes',{event:'INSERT',schema:'public',table:'cartellone_prenotazioni'},()=>refresh())
-        .subscribe();
-    }catch(e){/* realtime facoltativo */}
-  }
+  handleReturn();
+  await loadBoard();
+  renderCart();
+  setInterval(loadBoard, 20000);
 })();
 </script>
 </body>
