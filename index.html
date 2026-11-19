@@ -40,7 +40,15 @@ body::after{
   content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
   background:radial-gradient(900px 480px at 50% -8%, rgba(245,182,63,.10), transparent 62%);
 }
-.wrap{max-width:1080px;margin:0 auto;padding:clamp(18px,3.5vw,40px) clamp(16px,4vw,28px) 150px}
+.wrap{max-width:1080px;margin:0 auto;padding:clamp(18px,3.5vw,40px) clamp(16px,4vw,28px) 150px;position:relative}
+.wrap>*{position:relative;z-index:1}
+.wmark{
+  position:absolute;z-index:0;top:clamp(6px,2.5vw,34px);left:50%;transform:translateX(-50%);
+  width:130%;text-align:center;white-space:nowrap;pointer-events:none;user-select:none;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.01em;
+  font-size:clamp(84px,19vw,250px);line-height:.9;
+  color:rgba(242,236,224,.055);
+}
 
 .mono{font-family:'Space Mono',monospace}
 .eyebrow{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--spark);font-weight:700}
@@ -236,6 +244,8 @@ body::after{
 <canvas id="confetti"></canvas>
 
 <div class="wrap" id="app">
+
+  <div class="wmark" aria-hidden="true">SCINTILLA</div>
 
   <div class="topbar">
     <div class="logo"><span class="spk"></span><b id="brandTop"></b></div>
