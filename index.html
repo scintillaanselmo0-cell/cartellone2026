@@ -43,12 +43,10 @@ body::after{
 .wrap{max-width:1080px;margin:0 auto;padding:clamp(18px,3.5vw,40px) clamp(16px,4vw,28px) 150px;position:relative}
 .wrap>*{position:relative;z-index:1}
 .wmark{
-  position:absolute;z-index:0;top:clamp(6px,2.5vw,34px);left:50%;transform:translateX(-50%);
-  width:130%;text-align:center;white-space:nowrap;pointer-events:none;user-select:none;
-  font-family:'Anton','Space Grotesk',sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.005em;
-  font-size:clamp(96px,22vw,290px);line-height:.9;
-  color:rgba(245,182,63,.12);
+  position:absolute;z-index:0;top:clamp(4px,2vw,30px);left:50%;transform:translateX(-50%);
+  width:min(1080px,100vw);height:auto;pointer-events:none;user-select:none;overflow:visible;
 }
+.wmark text{font-family:'Anton','Space Grotesk',sans-serif;fill:rgba(245,182,63,.12)}
 
 .mono{font-family:'Space Mono',monospace}
 .eyebrow{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--spark);font-weight:700}
@@ -245,7 +243,9 @@ body::after{
 
 <div class="wrap" id="app">
 
-  <div class="wmark" aria-hidden="true">SCINTILLA</div>
+  <svg class="wmark" aria-hidden="true" viewBox="0 0 1000 235" preserveAspectRatio="xMidYMid meet">
+    <text x="500" y="224" text-anchor="middle" textLength="1000" lengthAdjust="spacingAndGlyphs" font-size="300">SCINTILLA</text>
+  </svg>
 
   <div class="topbar">
     <div class="logo"><span class="spk"></span><b id="brandTop"></b></div>
