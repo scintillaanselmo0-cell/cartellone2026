@@ -27,6 +27,11 @@ drop policy if exists "cartellone cancellazione super admin" on cartellone_preno
 create policy "cartellone cancellazione super admin" on cartellone_prenotazioni for delete
 using (exists (select 1 from profiles p where p.user_id = auth.uid() and p.role = 'super_admin'));
 
+-- Il super admin può inserire una prenotazione manuale (es. pagamento in contanti)
+drop policy if exists "cartellone sa insert" on cartellone_prenotazioni;
+create policy "cartellone sa insert" on cartellone_prenotazioni for insert
+with check (exists (select 1 from profiles p where p.user_id = auth.uid() and p.role = 'super_admin'));
+
 -- 3) Vista pubblica: solo numero, stato e nome di battesimo (niente telefono/email).
 --    Mostra i pagati e i "pending" ancora validi (hold non scaduto).
 drop view if exists cartellone_board;
