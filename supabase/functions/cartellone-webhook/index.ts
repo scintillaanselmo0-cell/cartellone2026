@@ -72,7 +72,7 @@ async function inviaConferma(
   const KEY = Deno.env.get("RESEND_API_KEY");
   if (!KEY) { console.warn("RESEND_API_KEY mancante: email non inviata."); return; }
 
-  const FROM = Deno.env.get("MAIL_FROM") || "Cartellone della Fortuna <onboarding@resend.dev>";
+  const FROM = Deno.env.get("RESEND_FROM") || Deno.env.get("MAIL_FROM") || "Cartellone della Fortuna <onboarding@resend.dev>";
   const BCC = (Deno.env.get("MAIL_BCC") || "").trim();
 
   const to = s.customer_details?.email || (s.customer_email as string | null) || rows[0]?.email || "";
